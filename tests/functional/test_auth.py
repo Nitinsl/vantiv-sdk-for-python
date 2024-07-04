@@ -49,6 +49,17 @@ class TestAuth(unittest.TestCase):
         authorization.orderSource = 'ecommerce'
         authorization.id = 'thisisid'
 
+        # Create accountFundingTransactionData
+        accountfundingtransactiondata = fields.accountFundingTransactionData()
+        accountfundingtransactiondata.receiverLastName = 'Smith'
+        accountfundingtransactiondata.receiverState = 'AZ'
+        accountfundingtransactiondata.receiverCountry = 'USA'
+        accountfundingtransactiondata.receiverAccountNumber = '1234567890'
+        accountfundingtransactiondata.accountFundingTransactionType = 'walletTransfer'
+        accountfundingtransactiondata.receiverAccountNumberType = 'cardAccount'
+
+        authorization.accountFundingTransactionData = accountfundingtransactiondata
+
         card = fields.cardType()
         card.number = '4100000000000000'
         card.expDate = '1210'
@@ -91,7 +102,7 @@ class TestAuth(unittest.TestCase):
         enhancedData.lineItemData = lineItemDataList
         enhancedData.discountCode = '001'
         enhancedData.discountPercent = '10'
-        enhancedData.fulfilmentMethodType = 'DELIVERY'
+        enhancedData.fulfilmentMethodType = 'STANDARD_SHIPPING'
 
         authorization.enhancedData = enhancedData
 
@@ -535,7 +546,7 @@ class TestAuth(unittest.TestCase):
         authorization.amount = 106
         authorization.orderSource = 'ecommerce'
         authorization.id = 'thisisid'
-        authorization.businessIndicator = 'buyOnlinePickUpInStore'
+        authorization.businessIndicator = 'agentCashOut'
 
         card = fields.cardType()
         card.number = '4100000000000000'
@@ -555,10 +566,10 @@ class TestAuth(unittest.TestCase):
         authorization.amount = 106
         authorization.orderSource = 'ecommerce'
         authorization.id = 'thisisid'
-        authorization.businessIndicator = 'consumerBillPayment'
+        authorization.businessIndicator = 'rapidMerchantSettlement'
         authorization.crypto = False
         authorization.checkoutId = '123tyhgr34'
-        authorization.orderChannel = 'PHONE'
+        authorization.orderChannel = 'SMART_TV'
         authorization.fraudCheckStatus = 'Not Approved'
 
         contact = fields.contact()
@@ -599,13 +610,14 @@ class TestAuth(unittest.TestCase):
         authorization.amount = 106
         authorization.orderSource = 'ecommerce'
         authorization.id = 'thisisid'
-        authorization.businessIndicator = 'buyOnlinePickUpInStore'
+        authorization.businessIndicator = 'governmentNonProfitDisbursement'
         authorization.overridePolicy = 'fispolicy'
         authorization.fsErrorCode = 'Fiserrorcode'
         authorization.merchantAccountStatus = 'Active'
         authorization.productEnrolled = 'GUARPAY2'
         authorization.decisionPurpose = 'INFORMATION_ONLY'
         authorization.fraudSwitchIndicator = "PRE"
+        authorization.fraudCheckAction = 'APPROVED_SKIP_FRAUD_CHECK'
 
         card = fields.cardType()
         card.number = '4100000000000000'

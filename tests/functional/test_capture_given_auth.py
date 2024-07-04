@@ -50,6 +50,17 @@ class TestCaptureGivenAuth(unittest.TestCase):
         authInformation.authAmount = 12345
         transaction.authInformation = authInformation
 
+        # Create accountFundingTransactionData
+        accountfundingtransactiondata = fields.accountFundingTransactionData()
+        accountfundingtransactiondata.receiverLastName = 'Smith'
+        accountfundingtransactiondata.receiverState = 'ON'
+        accountfundingtransactiondata.receiverCountry = 'CA'
+        accountfundingtransactiondata.receiverAccountNumber = '1234567'
+        accountfundingtransactiondata.accountFundingTransactionType = 'personToPerson'
+        accountfundingtransactiondata.receiverAccountNumberType = 'email'
+
+        transaction.accountFundingTransactionData = accountfundingtransactiondata
+
         # Create cardType object
         card = fields.cardType()
         card.number = '4100000000000000'
@@ -305,7 +316,7 @@ class TestCaptureGivenAuth(unittest.TestCase):
         transaction.amount = 106
         transaction.orderSource = 'ecommerce'
         transaction.id = 'ThisIsID'
-        transaction.businessIndicator = 'consumerBillPayment'
+        transaction.businessIndicator = 'debitPrepaidAccount'
 
         # Create authInformation
         authInformation = fields.authInformation()
@@ -331,7 +342,7 @@ class TestCaptureGivenAuth(unittest.TestCase):
         transaction.amount = 106
         transaction.orderSource = 'ecommerce'
         transaction.id = 'ThisIsID'
-        transaction.businessIndicator = 'consumerBillPayment'
+        transaction.businessIndicator = 'governmentNonProfitDisbursement'
 
         card = fields.cardType()
         card.number = '4100000000000001'
@@ -393,7 +404,7 @@ class TestCaptureGivenAuth(unittest.TestCase):
         transaction.amount = 2000
         transaction.orderSource = 'ecommerce'
         transaction.id = 'NewTxnID'
-        transaction.businessIndicator = 'consumerBillPayment'
+        transaction.businessIndicator = 'debitPrepaidAccount'
 
         # Create authInformation
         authInformation = fields.authInformation()
@@ -420,7 +431,7 @@ class TestCaptureGivenAuth(unittest.TestCase):
         transaction.amount = 100
         transaction.orderSource = 'ecommerce'
         transaction.id = 'NewTxnID'
-        transaction.businessIndicator = 'consumerBillPayment'
+        transaction.businessIndicator = 'rapidMerchantSettlement'
         authInformation = fields.authInformation()
         authInformation.authDate = datetime.datetime.now().strftime("%Y-%m-%d")
         authInformation.authCode = '543216'
@@ -447,6 +458,7 @@ class TestCaptureGivenAuth(unittest.TestCase):
         lineItemDataList.append(lineItemData)
         enhancedData = fields.enhancedData()
         enhancedData.lineItemData = lineItemDataList
+        enhancedData.fulfilmentMethodType = 'STANDARD_SHIPPING'
         transaction.enhancedData = enhancedData
         transaction.foreignRetailerIndicator = 'F'
         response = online.request(transaction, conf)

@@ -63,7 +63,7 @@ class TestVendorCredit(unittest.TestCase):
         transaction.fundingSubmerchantId = "value for fundingSubmerchantId"
         transaction.fundsTransferId = "value for fundsTransferId"
         transaction.vendorName = "Vantiv"
-        transaction.amount = 1512
+        transaction.amount = 1512151215
 
         account_info = fields.echeckTypeCtx()
         account_info.accType = 'Savings'

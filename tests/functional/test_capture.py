@@ -182,6 +182,8 @@ class TestCapture(unittest.TestCase):
         lineItemDataList.append(lineItemData)
         enhancedData = fields.enhancedData()
         enhancedData.lineItemData = lineItemDataList
+        enhancedData.fulfilmentMethodType = 'EXPEDITED_SHIPPING'
+
         transaction.enhancedData = enhancedData
         transaction.foreignRetailerIndicator = 'F'
         response = online.request(transaction, conf)

@@ -54,6 +54,7 @@ class TestEcheckRedeposit(unittest.TestCase):
         echeck.routingNum = '123456789'
         echeck.checkNum = '123455'
         echeck.accType = 'Checking'
+        echeck.accountId = 'account'
         transaction.echeck = echeck
 
         response = online.request(transaction, conf)
