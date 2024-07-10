@@ -22,7 +22,6 @@ class TestFinicityAccountRequest(unittest.TestCase):
         transaction.id = "1234"
 
         response = online.request(transaction, conf)
-        print(response['finicityAccountResponse'])
         self.assertEqual('000', response['finicityAccountResponse']['response'])
         self.assertEqual('Approved', response['finicityAccountResponse']['message'])
         self.assertEqual('sandbox', response['finicityAccountResponse']['location'])

@@ -662,6 +662,243 @@ class TestBatch(unittest.TestCase):
         self.assertEquals(response['batchResponse']['captureGivenAuthResponse']['cnpTxnId'], '135411011739311214')
         self.assertEquals(response['batchResponse']['saleResponse']['cnpTxnId'], '427453992541199977')
 
+    @mock.patch.object(batch, '_get_file_str_from_sftp')
+    def test_batch_v12_37(self,mock__get_file_str_from_sftp):
+        txnBatch = batch.Transactions()
+        authorization = fields.authorization()
+        authorization.id = '1'
+        authorization.customerId = 'Cust0403'
+        authorization.reportGroup = 'Default Report Group'
+        authorization.orderId = '12344401'
+        authorization.amount = 1061512151
+        authorization.orderSource = 'ecommerce'
+        card = fields.cardType()
+        card.number = '4100000000000000'
+        card.expDate = '1210'
+        card.type = 'VI'
+        authorization.card = card
+        authorization.orderChannel = 'MIT'
+        authorization.authIndicator = 'Estimated'
+        authorization.businessIndicator = 'agentCashOut'
+        authorization.orderChannel = 'SMART_TV'
+        authorization.fraudCheckAction = 'APPROVED_SKIP_FRAUD_CHECK'
+        # Create accountFundingTransactionData
+        accountfundingtransactiondata = fields.accountFundingTransactionData()
+        accountfundingtransactiondata.receiverLastName = 'Smith'
+        accountfundingtransactiondata.receiverState = 'AZ'
+        accountfundingtransactiondata.receiverCountry = 'USA'
+        accountfundingtransactiondata.receiverAccountNumber = '1234567890'
+        accountfundingtransactiondata.accountFundingTransactionType = 'walletTransfer'
+        accountfundingtransactiondata.receiverAccountNumberType = 'RTNAndBAN'
+        authorization.accountFundingTransactionData = accountfundingtransactiondata
+
+        customerInfo = fields.customerInfo()
+
+        customerInfo.accountUserName = 'Jack'
+        customerInfo.userAccountNumber = '1234'
+        customerInfo.userAccountEmail = 'gmail@gmail.com'
+        customerInfo.membershipId = '11111'
+        customerInfo.membershipPhone = '123456'
+        customerInfo.membershipEmail = 'gmail@gmail.com'
+        customerInfo.membershipName = 'fran'
+        customerInfo.accountCreatedDate = datetime.datetime.now().strftime("%Y-%m-%d")
+        customerInfo.userAccountPhone = '000461223'
+
+        authorization.customerInfo = customerInfo
+
+        detailTaxList = list()
+        detailTax = fields.detailTax()
+        detailTax.taxAmount = 100
+        detailTax2 = fields.detailTax()
+        detailTax2.taxAmount = 200
+        detailTaxList.append(detailTax)
+        detailTaxList.append(detailTax2)
+        lineItemDataList = list()
+        lineItemData = fields.lineItemData()
+        lineItemData.itemDescription = 'des'
+        lineItemData.itemCategory = 'Chock'
+        lineItemData.itemCategory = 'Chock'
+        lineItemData.itemSubCategory = 'pen'
+        lineItemData.productId = '001'
+        lineItemData.productName = 'prod'
+        lineItemDataList.append(lineItemData)
+        enhancedData = fields.enhancedData()
+        enhancedData.detailTax = detailTaxList
+        enhancedData.lineItemData = lineItemDataList
+        enhancedData.discountCode = '001'
+        enhancedData.discountPercent = '10'
+        enhancedData.fulfilmentMethodType = 'STANDARD_SHIPPING'
+
+        authorization.enhancedData = enhancedData
+
+        txnBatch.add(authorization)
+
+        capture = fields.capture()
+        capture.cnpTxnId = 123456000
+        capture.orderId = '457754'
+        capture.amount = 6000
+        capture.id = 'ID001'
+        card = fields.cardType()
+        card.number = '4100100000000000'
+        card.expDate = '1210'
+        card.type = 'VI'
+        capture.card = card
+        capture.foreignRetailerIndicator = 'F'
+        enhancedData.fulfilmentMethodType = 'EXPEDITED_SHIPPING'
+        capture.enhancedData=enhancedData
+        txnBatch.add(capture)
+
+        forceCapture = fields.forceCapture()
+        forceCapture.reportGroup = 'Default Report Group'
+        forceCapture.orderId = '12345'
+        forceCapture.amount = 7000
+        forceCapture.orderSource = 'ecommerce'
+        forceCapture.processingType = 'accountFunding'
+        forceCapture.id = '54321'
+        forceCapture.businessIndicator = 'businessToBusinessTransfer'
+        card = fields.cardType()
+        card.number = '4100000000000001'
+        card.expDate = '1210'
+        card.type = 'VI'
+        forceCapture.card = card
+        forceCapture.foreignRetailerIndicator = 'F'
+        enhancedData.fulfilmentMethodType = 'EXPEDITED_SHIPPING'
+        forceCapture.enhancedData = enhancedData
+        txnBatch.add(forceCapture)
+
+        captureGivenAuth = fields.captureGivenAuth()
+        captureGivenAuth.orderId = '77373'
+        captureGivenAuth.amount = 2000
+        captureGivenAuth.orderSource = 'ecommerce'
+        captureGivenAuth.id = 'NewTxnID'
+        captureGivenAuth.businessIndicator = 'governmentNonProfitDisbursement'
+        card = fields.cardType()
+        card.number = '4100000000000000'
+        card.expDate = '1210'
+        card.type = 'VI'
+        # The type of card is cardType
+        captureGivenAuth.card = card
+        captureGivenAuth.foreignRetailerIndicator = 'F'
+        txnBatch.add(captureGivenAuth)
+
+        sale = fields.sale()
+        sale.id = 'auth_GP_DI'
+        sale.reportGroup = 'DirectWFITxn'
+        sale.orderId = 'XGR-1840823423'
+        sale.amount = 1100
+        sale.orderSource = 'telephone'
+        card = fields.cardType()
+        card.number = '4100000000000000'
+        card.expDate = '1210'
+        card.type = 'VI'
+        sale.card = card
+        sale.orderChannel = 'SMART_TV'
+        sale.foreignRetailerIndicator = 'F'
+        sale.businessIndicator = 'rapidMerchantSettlement'
+        sale.accountFundingTransactionData = accountfundingtransactiondata
+        sale.fraudCheckAction = 'APPROVED_SKIP_FRAUD_CHECK'
+        enhancedData.fulfilmentMethodType = 'STANDARD_SHIPPING'
+        sale.enhancedData = enhancedData
+        txnBatch.add(sale)
+
+        submerchantcredit = fields.submerchantCredit()
+        submerchantcredit.id = 'ThisIsID'
+        submerchantcredit.reportGroup = 'Default Report Group'
+        submerchantcredit.fundingSubmerchantId = "value for fundingSubmerchantId"
+        submerchantcredit.submerchantName = "temp1200"
+        submerchantcredit.fundsTransferId = "value for fundsTransferId"
+        submerchantcredit.amount = 1512
+        account_info = fields.echeckTypeCtx()
+        account_info.accType = 'Savings'
+        account_info.accNum = "1234"
+        account_info.routingNum = "12345678"
+        submerchantcredit.accountInfo = account_info
+        submerchantcredit.customIdentifier = '127'
+        txnBatch.add(submerchantcredit)
+
+        submerchantdebit = fields.submerchantDebit()
+        submerchantdebit.id = 'ThisIsID'
+        submerchantdebit.reportGroup = 'Default Report Group'
+        submerchantdebit.fundingSubmerchantId = "value for fundingSubmerchantId"
+        submerchantdebit.submerchantName = "temp1200"
+        submerchantdebit.fundsTransferId = "value for fundsTransferId"
+        submerchantdebit.amount = 1512151212
+        submerchantdebit.accountInfo = account_info
+        submerchantdebit.customIdentifier = '123'
+        txnBatch.add(submerchantdebit)
+
+        vendordebit = fields.vendorDebit()
+        vendordebit.id = 'ThisIsID'
+        vendordebit.reportGroup = 'Default Report Group'
+        vendordebit.fundingSubmerchantId = "value for fundingSubmerchantId"
+        vendordebit.submerchantName = "temp1200"
+        vendordebit.fundsTransferId = "value for fundsTransferId"
+        vendordebit.amount = 1512151212
+        vendordebit.accountInfo = account_info
+        vendordebit.customIdentifier = '123'
+        txnBatch.add(vendordebit)
+
+        vendorcredit = fields.vendorCredit()
+        vendorcredit.id = 'ThisIsID'
+        vendorcredit.reportGroup = 'Default Report Group'
+        vendorcredit.fundingSubmerchantId = "value for fundingSubmerchantId"
+        vendorcredit.submerchantName = "temp1200"
+        vendorcredit.fundsTransferId = "value for fundsTransferId"
+        vendorcredit.amount = 1512151
+        vendorcredit.accountInfo = account_info
+        vendorcredit.customIdentifier = '123'
+        txnBatch.add(vendorcredit)
+
+        mock__get_file_str_from_sftp.return_value = """
+                                         <cnpResponse version='12.37' response='0' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'>
+                                                   <batchResponse cnpBatchId='12344' merchantId='DirectWFITxn' numAccountUpdates='3' xmlns='http://www.vantivcnp.com/schema'>
+                                                          <captureResponse id="ID001" reportGroup="Default Report Group">
+                                                               <cnpTxnId>470196194391774838</cnpTxnId>
+                                                               <response>000</response>
+                                                               <responseTime>2024-07-09T07:07:23.526</responseTime>
+                                                               <message>Approved</message>
+                                                               <location>sandbox</location>
+                                                          </captureResponse>
+                                                          <forceCaptureResponse id="54321" reportGroup="Default Report Group">
+                                                               <cnpTxnId>196571629314446150</cnpTxnId>
+                                                               <response>000</response>
+                                                               <responseTime>2024-07-09T07:19:07.817</responseTime>
+                                                               <message>Approved</message>
+                                                               <location>sandbox</location>
+                                                          </forceCaptureResponse>
+                                                          <captureGivenAuthResponse id="NewTxnID" reportGroup="Default Report Group">
+                                                               <cnpTxnId>135411011739311214</cnpTxnId>
+                                                               <response>000</response>
+                                                               <message>Approved</message>
+                                                               <responseTime>2024-07-09T07:20:38.2</responseTime>
+                                                               <giftCardResponse>
+                                                                 <txnTime>2024-07-09T07:20:38.2</txnTime>
+                                                                 <refCode>369198</refCode>
+                                                                 <systemTraceId>0</systemTraceId>
+                                                                 <sequenceNumber>123456</sequenceNumber>
+                                                               </giftCardResponse>
+                                                               <location>sandbox</location>
+                                                          </captureGivenAuthResponse>
+                                                          <saleResponse id="auth_GP_DI" reportGroup="DirectWFITxn">
+                                                               <cnpTxnId>427453992541199977</cnpTxnId>
+                                                               <orderId>XGR-1840823423</orderId>
+                                                               <response>000</response>
+                                                               <message>Approved</message>
+                                                               <responseTime>2024-07-09T09:27:19.759</responseTime>
+                                                               <authCode>00229</authCode>
+                                                               <networkTransactionId>63225578415568556365452427825</networkTransactionId>
+                                                               <location>sandbox</location>
+                                                          </saleResponse>
+                                                   </batchResponse>
+                                         </cnpResponse>"""
+
+        response = batch.retrieve('retrieve_file', conf)
+        print(response['batchResponse'])
+        self.assertEquals(response['batchResponse']['captureResponse']['cnpTxnId'], '470196194391774838')
+        self.assertEquals(response['batchResponse']['forceCaptureResponse']['cnpTxnId'], '196571629314446150')
+        self.assertEquals(response['batchResponse']['captureGivenAuthResponse']['cnpTxnId'], '135411011739311214')
+        self.assertEquals(response['batchResponse']['saleResponse']['cnpTxnId'], '427453992541199977')
+
     def test_download(self):
         # first arg is str and len less than 4
         self.assertRaises(utils.VantivException, batch.download, 'abc', conf)
@@ -744,7 +981,6 @@ class TestBatch(unittest.TestCase):
 #         # return fields object.
 #         response = batch.retrieve('abcd', conf, 'object')
 #         self.assertEquals('0', response.response)
-
 
 if __name__ == '__main__':
     unittest.main()
