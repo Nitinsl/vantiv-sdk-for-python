@@ -1,6 +1,65 @@
 Transactions
 ============
 
+BNPLAuthorizationRequest
+------------------------
+    .. py:class:: vantivsdk.fields.BNPLAuthorizationRequest
+
+        :var amount: String or Number
+        :var billToAddress: instance of :py:class:`vantivsdk.fields.billToAddress`
+        :var customerId: String or Number
+        :var customerInfo: instance of :py:class:`vantivsdk.fields.customerInfo`
+        :var enhancedData: instance of :py:class:`vantivsdk.fields.enhancedData`
+        :var id: String or Number
+        :var orderId: String or Number
+        :var postCheckoutRedirectUrl: instance of :py:class:`vantivsdk.fields.postCheckoutRedirectUrl`
+        :var provider: String or Number
+        :var reportGroup: String or Number
+        :var shipToAddress: instance of :py:class:`vantivsdk.fields.shipToAddress`
+
+BNPLCancelRequest
+-----------------
+    .. py:class:: vantivsdk.fields.BNPLCancelRequest
+
+        :var amount: String or Number
+        :var cnpTxnId: String or Number
+        :var customerId: String or Number
+        :var id: String or Number
+        :var orderId: String or Number
+        :var reportGroup: String or Number
+
+BNPLCaptureRequest
+------------------
+    .. py:class:: vantivsdk.fields.BNPLCaptureRequest
+
+        :var amount: String or Number
+        :var cnpTxnId: String or Number
+        :var customerId: String or Number
+        :var id: String or Number
+        :var orderId: String or Number
+        :var reportGroup: String or Number
+
+BNPLInquiryRequest
+------------------
+    .. py:class:: vantivsdk.fields.BNPLInquiryRequest
+
+        :var cnpTxnId: String or Number
+        :var customerId: String or Number
+        :var id: String or Number
+        :var orderId: String or Number
+        :var reportGroup: String or Number
+
+BNPLRefundRequest
+-----------------
+    .. py:class:: vantivsdk.fields.BNPLRefundRequest
+
+        :var amount: String or Number
+        :var cnpTxnId: String or Number
+        :var customerId: String or Number
+        :var id: String or Number
+        :var orderId: String or Number
+        :var reportGroup: String or Number
+
 accountUpdate
 -------------
     .. py:class:: vantivsdk.fields.accountUpdate
@@ -58,6 +117,7 @@ authorization
 -------------
     .. py:class:: vantivsdk.fields.authorization
 
+        :var accountFundingTransactionData: instance of :py:class:`vantivsdk.fields.accountFundingTransactionData`
         :var additionalCOFData: instance of :py:class:`vantivsdk.fields.additionalCOFData`
         :var advancedFraudChecks: instance of :py:class:`vantivsdk.fields.advancedFraudChecksType`
         :var allowPartialAuth: String or Number
@@ -77,6 +137,7 @@ authorization
         :var decisionPurpose: String or Number
         :var enhancedData: instance of :py:class:`vantivsdk.fields.enhancedData`
         :var filtering: instance of :py:class:`vantivsdk.fields.filteringType`
+        :var fraudCheckAction: String or Number
         :var fraudCheckStatus: String or Number
         :var fraudFilterOverride: String or Number
         :var fraudSwitchIndicator: String or Number
@@ -158,6 +219,7 @@ captureGivenAuth
 ----------------
     .. py:class:: vantivsdk.fields.captureGivenAuth
 
+        :var accountFundingTransactionData: instance of :py:class:`vantivsdk.fields.accountFundingTransactionData`
         :var additionalCOFData: instance of :py:class:`vantivsdk.fields.additionalCOFData`
         :var amount: String or Number
         :var authInformation: instance of :py:class:`vantivsdk.fields.authInformation`
@@ -210,6 +272,7 @@ credit
 ------
     .. py:class:: vantivsdk.fields.credit
 
+        :var accountFundingTransactionData: instance of :py:class:`vantivsdk.fields.accountFundingTransactionData`
         :var actionReason: String or Number
         :var additionalCOFData: instance of :py:class:`vantivsdk.fields.additionalCOFData`
         :var amount: String or Number
@@ -447,10 +510,32 @@ fastAccessFunding
         :var submerchantName: String or Number
         :var token: instance of :py:class:`vantivsdk.fields.cardTokenType`
 
+finicityAccountRequest
+----------------------
+    .. py:class:: vantivsdk.fields.finicityAccountRequest
+
+        :var customerId: String or Number
+        :var echeckCustomerId: String or Number
+        :var id: String or Number
+        :var reportGroup: String or Number
+
+finicityUrlRequest
+------------------
+    .. py:class:: vantivsdk.fields.finicityUrlRequest
+
+        :var customerId: String or Number
+        :var email: String or Number
+        :var firstName: String or Number
+        :var id: String or Number
+        :var lastName: String or Number
+        :var phoneNumber: String or Number
+        :var reportGroup: String or Number
+
 forceCapture
 ------------
     .. py:class:: vantivsdk.fields.forceCapture
 
+        :var accountFundingTransactionData: instance of :py:class:`vantivsdk.fields.accountFundingTransactionData`
         :var amount: String or Number
         :var billToAddress: instance of :py:class:`vantivsdk.fields.billToAddress`
         :var businessIndicator: String or Number
@@ -730,6 +815,7 @@ sale
 ----
     .. py:class:: vantivsdk.fields.sale
 
+        :var accountFundingTransactionData: instance of :py:class:`vantivsdk.fields.accountFundingTransactionData`
         :var additionalCOFData: instance of :py:class:`vantivsdk.fields.additionalCOFData`
         :var advancedFraudChecks: instance of :py:class:`vantivsdk.fields.advancedFraudChecksType`
         :var allowPartialAuth: String or Number
@@ -751,6 +837,7 @@ sale
         :var filtering: instance of :py:class:`vantivsdk.fields.filteringType`
         :var foreignRetailerIndicator: String or Number
         :var fraudCheck: instance of :py:class:`vantivsdk.fields.fraudCheckType`
+        :var fraudCheckAction: String or Number
         :var fraudCheckStatus: String or Number
         :var fraudFilterOverride: String or Number
         :var fraudSwitchIndicator: String or Number

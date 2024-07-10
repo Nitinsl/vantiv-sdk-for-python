@@ -1,6 +1,18 @@
 Complex Types
 =============
 
+accountFundingTransactionData
+-----------------------------
+    .. py:class:: vantivsdk.fields.accountFundingTransactionData
+
+        :var accountFundingTransactionType: String or Number
+        :var receiverAccountNumber: String or Number
+        :var receiverAccountNumberType: String or Number
+        :var receiverCountry: String or Number
+        :var receiverFirstName: String or Number
+        :var receiverLastName: String or Number
+        :var receiverState: String or Number
+
 additionalCOFData
 -----------------
     .. py:class:: vantivsdk.fields.additionalCOFData
@@ -249,8 +261,10 @@ echeckType
 
         :var accNum: String or Number
         :var accType: String or Number
+        :var accountId: String or Number
         :var ccdPaymentInformation: String or Number
         :var checkNum: String or Number
+        :var echeckCustomerId: String or Number
         :var routingNum: String or Number
 
 echeckTypeCtx
@@ -477,6 +491,11 @@ pos
         :var catLevel: String or Number
         :var entryMode: String or Number
         :var terminalId: String or Number
+
+postCheckoutRedirectUrl
+-----------------------
+    .. py:class:: vantivsdk.fields.postCheckoutRedirectUrl
+
 
 preferredDebitNetworksType
 --------------------------
