@@ -45,6 +45,10 @@ class TestDepositTransactionReversal(unittest.TestCase):
         transactions.id = 'thisisid'
         transactions.pin = '123456'
 
+        enhancedData = fields.enhancedData()
+        enhancedData.fulfilmentMethodType = 'STANDARD_SHIPPING'
+        transactions.enhancedData = enhancedData
+
         response = online.request(transactions, conf)
         self.assertEquals('000', response['depositTransactionReversalResponse']['response'])
         self.assertEquals('sandbox', response['depositTransactionReversalResponse']['location'])

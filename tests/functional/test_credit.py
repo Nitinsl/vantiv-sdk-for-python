@@ -50,6 +50,17 @@ class TestCredit(unittest.TestCase):
 
         transaction.card = card
 
+        # Create accountFundingTransactionData
+        accountfundingtransactiondata = fields.accountFundingTransactionData()
+        accountfundingtransactiondata.receiverLastName = 'Roy'
+        accountfundingtransactiondata.receiverState = 'AZ'
+        accountfundingtransactiondata.receiverCountry = 'USA'
+        accountfundingtransactiondata.receiverAccountNumberType = 'socialNetworkID'
+        accountfundingtransactiondata.receiverAccountNumber = '12343564'
+        accountfundingtransactiondata.accountFundingTransactionType = 'paymentOfOwnCreditCardBill'
+
+        transaction.accountFundingTransactionData = accountfundingtransactiondata
+
         response = online.request(transaction, conf)
         self.assertEquals('000', response['creditResponse']['response'])
         self.assertEquals('sandbox', response['creditResponse']['location'])
@@ -167,7 +178,7 @@ class TestCredit(unittest.TestCase):
         transaction.amount = 106
         transaction.orderSource = 'ecommerce'
         transaction.id = 'ThisIsID'
-        transaction.businessIndicator = 'consumerBillPayment'
+        transaction.businessIndicator = 'rapidMerchantSettlement'
 
         card = fields.cardType()
         card.number = '4100000000000000'
@@ -187,7 +198,7 @@ class TestCredit(unittest.TestCase):
         transaction.amount = 106
         transaction.orderSource = 'ecommerce'
         transaction.id = 'ThisIsID'
-        transaction.businessIndicator = 'consumerBillPayment'
+        transaction.businessIndicator = 'governmentNonProfitDisbursement'
 
         card = fields.cardType()
         card.number = '4100000000000000'
@@ -246,7 +257,7 @@ class TestCredit(unittest.TestCase):
         transaction.amount = 106
         transaction.orderSource = 'ecommerce'
         transaction.id = 'ThisIsID'
-        transaction.businessIndicator = 'consumerBillPayment'
+        transaction.businessIndicator = 'agentCashOut'
 
         card = fields.cardType()
         card.number = '4100000000000000'
@@ -275,7 +286,7 @@ class TestCredit(unittest.TestCase):
         transaction.amount = 106
         transaction.orderSource = 'ecommerce'
         transaction.id = 'ThisIsID'
-        transaction.businessIndicator = 'consumerBillPayment'
+        transaction.businessIndicator = 'paymentOfOwnCreditCardBill'
         card = fields.cardType()
         card.number = '4457010000000009'
         card.expDate = '1210'
@@ -297,6 +308,7 @@ class TestCredit(unittest.TestCase):
         lineItemDataList.append(lineItemData)
         enhancedData = fields.enhancedData()
         enhancedData.lineItemData = lineItemDataList
+        enhancedData.fulfilmentMethodType = 'EXPEDITED_SHIPPING'
         transaction.enhancedData = enhancedData
 
         response = online.request(transaction, conf)

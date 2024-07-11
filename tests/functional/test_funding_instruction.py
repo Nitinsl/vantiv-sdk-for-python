@@ -45,7 +45,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'id': 'OnlinePC2',
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002000
+                'amount': 900010000
             }
         }
 
@@ -58,7 +58,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'id': 'OnlinePC2',
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002000
+                'amount': 900010000
             }
         }
 
@@ -72,7 +72,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'submerchantName': 'Jon Snow',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002000,
+                'amount': 900010000,
                 'accountInfo': {
                     'accNum': '123456789012',
                     'routingNum': '123456789',
@@ -92,7 +92,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'submerchantName': 'Jon Snow',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002000,
+                'amount': 900010000,
                 'accountInfo': {
                     'accNum': '123456789012',
                     'routingNum': '123456789',
@@ -112,7 +112,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'vendorName': 'Jon Snow',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002000,
+                'amount': 900010000,
                 'accountInfo': {
                     'accNum': '123456789012',
                     'routingNum': '123456789',
@@ -131,7 +131,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'fundingCustomerId': 'fundingCustomerId',
                 'vendorName': 'Jon Snow',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002000,
+                'amount': 900010000,
                 'accountInfo': {
                     'accNum': '123456789012',
                     'routingNum': '123456789',
@@ -150,7 +150,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'vendorName': 'Jon Snow',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002000,
+                'amount': 900010000,
                 'accountInfo': {
                     'accNum': '123456789012',
                     'routingNum': '123456789',
@@ -169,7 +169,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'fundingCustomerId': 'fundingCustomerId',
                 'vendorName': 'Jon Snow',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002000,
+                'amount': 900010000,
                 'accountInfo': {
                     'accNum': '123456789012',
                     'routingNum': '123456789',
@@ -213,7 +213,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'id': 'OnlinePC2',
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002000,
+                'amount': 900010000,
             }
         }
 
@@ -226,7 +226,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'id': 'OnlinePC2',
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002000,
+                'amount': 900010000
             }
         }
 
@@ -298,7 +298,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'id': 'OnlinePC2',
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002940
+                'amount': 90001940
             }
         }
 
@@ -311,7 +311,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'id': 'OnlinePC2',
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002940
+                'amount': 90001940
             }
         }
 
@@ -325,7 +325,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'submerchantName': 'Jon Snow',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002940,
+                'amount': 90001940,
                 'accountInfo': {
                     'accNum': '123456789012',
                     'routingNum': '123456789',
@@ -345,7 +345,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'submerchantName': 'Jon Snow',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002940,
+                'amount': 900012940,
                 'accountInfo': {
                     'accNum': '123456789012',
                     'routingNum': '123456789',
@@ -365,7 +365,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'vendorName': 'Jon Snow',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002940,
+                'amount': 900012940,
                 'accountInfo': {
                     'accNum': '123456789012',
                     'routingNum': '123456789',
@@ -384,7 +384,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'vendorName': 'Jon Snow',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002940,
+                'amount': 900012940,
                 'accountInfo': {
                     'accNum': '123456789012',
                     'routingNum': '123456789',
@@ -428,7 +428,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'id': 'OnlinePC2',
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002940,
+                'amount': 900012940,
             }
         }
 
@@ -441,7 +441,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'id': 'OnlinePC2',
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002940,
+                'amount': 900012940,
             }
         }
 
@@ -484,7 +484,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'id': 'OnlinePC2',
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002941
+                'amount': 900012941
             }
         }
 
@@ -497,7 +497,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'id': 'OnlinePC2',
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002941
+                'amount': 900012941
             }
         }
 
@@ -511,7 +511,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'submerchantName': 'Jon Snow',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002941,
+                'amount': 900012941,
                 'accountInfo': {
                     'accNum': '123456789012',
                     'routingNum': '123456789',
@@ -531,7 +531,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'submerchantName': 'Jon Snow',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002941,
+                'amount': 900012941,
                 'accountInfo': {
                     'accNum': '123456789012',
                     'routingNum': '123456789',
@@ -551,7 +551,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'vendorName': 'Jon Snow',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002941,
+                'amount': 900012941,
                 'accountInfo': {
                     'accNum': '123456789012',
                     'routingNum': '123456789',
@@ -570,7 +570,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'vendorName': 'Jon Snow',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002941,
+                'amount': 900012941,
                 'accountInfo': {
                     'accType': 'Checking',
                     'accNum': '123456789012',
@@ -614,7 +614,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'id': 'OnlinePC2',
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002941,
+                'amount': 900012941,
             }
         }
 
@@ -627,7 +627,7 @@ class TestFundingInstruction(unittest.TestCase):
                 'id': 'OnlinePC2',
                 'fundingSubmerchantId': 'fundingSubmerchantId',
                 'fundsTransferId': 'fundsTransferId',
-                'amount': 900010002941,
+                'amount': 900012941,
             }
         }
 

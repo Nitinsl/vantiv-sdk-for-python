@@ -10,6 +10,7 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+
     <xs:simpleType name="string16Type">
         <xs:restriction base="xs:string">
             <xs:maxLength value="16" />
@@ -83,7 +84,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-     <xs:simpleType name="string5Type">
+    <xs:simpleType name="string5Type">
         <xs:restriction base="xs:string">
             <xs:maxLength value="5" />
         </xs:restriction>
@@ -295,8 +296,65 @@
             <xs:enumeration value="consumerBillPayment" />
             <xs:enumeration value="buyOnlinePickUpInStore" />
             <xs:enumeration value="highRiskSecuritiesPurchase" />
+            <xs:enumeration value="fundTransfer" />                    <!-- Deprecated in kit 281: moved to accountFundingTransactionTypeEnum -->
+            <xs:enumeration value="walletTransfer" />                  <!-- Deprecated in kit 281: moved to accountFundingTransactionTypeEnum -->
+            <xs:enumeration value="accountToAccount" />                <!-- Deprecated in kit 281: moved to accountFundingTransactionTypeEnum -->
+            <xs:enumeration value="bankInitiated" />                   <!-- Deprecated in kit 281: moved to accountFundingTransactionTypeEnum -->
+            <xs:enumeration value="fundsDisbursement" />               <!-- Deprecated in kit 281: moved to accountFundingTransactionTypeEnum -->
+            <xs:enumeration value="payrollDisbursement" />             <!-- Deprecated in kit 281: moved to accountFundingTransactionTypeEnum -->
+            <xs:enumeration value="personToPerson" />                  <!-- Deprecated in kit 281: moved to accountFundingTransactionTypeEnum -->
+            <xs:enumeration value="topUp" />                           <!-- Deprecated in kit 281: moved to accountFundingTransactionTypeEnum -->
+            <xs:enumeration value="personToPersonCardAccount" />       <!-- Deprecated in kit 281: moved to accountFundingTransactionTypeEnum -->
+            <xs:enumeration value="debitPrepaidAccount" />             <!-- Deprecated in kit 281: moved to accountFundingTransactionTypeEnum -->
+            <xs:enumeration value="paymentOfOwnCreditCardBill" />      <!-- Deprecated in kit 281: moved to accountFundingTransactionTypeEnum -->
+            <xs:enumeration value="businessDisbursement" />            <!-- Deprecated in kit 281: moved to accountFundingTransactionTypeEnum -->
+            <xs:enumeration value="businessToBusinessTransfer" />      <!-- Deprecated in kit 281: moved to accountFundingTransactionTypeEnum -->
+            <xs:enumeration value="governmentNonProfitDisbursement" /> <!-- Deprecated in kit 281: moved to accountFundingTransactionTypeEnum -->
+            <xs:enumeration value="rapidMerchantSettlement" />         <!-- Deprecated in kit 281: moved to accountFundingTransactionTypeEnum -->
+            <xs:enumeration value="agentCashOut" />                    <!-- Deprecated in kit 281: moved to accountFundingTransactionTypeEnum -->
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="accountFundingTransactionTypeEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="accountToAccount" />
+            <xs:enumeration value="agentCashOut" />
+            <xs:enumeration value="bankInitiated" />
+            <xs:enumeration value="businessDisbursement" />
+            <xs:enumeration value="businessToBusinessTransfer" />
+            <xs:enumeration value="debitPrepaidAccount" />
+            <xs:enumeration value="fundsDisbursement" />
             <xs:enumeration value="fundTransfer" />
+            <xs:enumeration value="governmentNonProfitDisbursement" />
+            <xs:enumeration value="paymentOfOwnCreditCardBill" />
+            <xs:enumeration value="payrollDisbursement" />
+            <xs:enumeration value="personToPerson" />
+            <xs:enumeration value="personToPersonCardAccount" />
+            <xs:enumeration value="rapidMerchantSettlement" />
+            <xs:enumeration value="topUp" />
             <xs:enumeration value="walletTransfer" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="accountFundingTransactionAccountNumberTypeEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="other" />
+            <xs:enumeration value="RTNAndBAN" />
+            <xs:enumeration value="IBAN" />
+            <xs:enumeration value="cardAccount" />
+            <xs:enumeration value="email" />
+            <xs:enumeration value="phoneNumber" />
+            <xs:enumeration value="BANAndBIC" />
+            <xs:enumeration value="walletID" />
+            <xs:enumeration value="socialNetworkID" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="achTransactionAmountType">
+        <xs:restriction base="xs:integer">
+            <xs:totalDigits value="10" />
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="9999999999"/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -352,7 +410,74 @@
         </xs:restriction>
     </xs:simpleType>
 
-
+    <xs:simpleType name="stateTypeEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="AL" />
+            <xs:enumeration value="AK" />
+            <xs:enumeration value="AZ" />
+            <xs:enumeration value="AR" />
+            <xs:enumeration value="CA" />
+            <xs:enumeration value="CO" />
+            <xs:enumeration value="CT" />
+            <xs:enumeration value="DE" />
+            <xs:enumeration value="DC" />
+            <xs:enumeration value="FL" />
+            <xs:enumeration value="GA" />
+            <xs:enumeration value="HI" />
+            <xs:enumeration value="ID" />
+            <xs:enumeration value="IL" />
+            <xs:enumeration value="IN" />
+            <xs:enumeration value="IA" />
+            <xs:enumeration value="KS" />
+            <xs:enumeration value="KY" />
+            <xs:enumeration value="LA" />
+            <xs:enumeration value="ME" />
+            <xs:enumeration value="MD" />
+            <xs:enumeration value="MA" />
+            <xs:enumeration value="MI" />
+            <xs:enumeration value="MN" />
+            <xs:enumeration value="MS" />
+            <xs:enumeration value="MO" />
+            <xs:enumeration value="MT" />
+            <xs:enumeration value="NE" />
+            <xs:enumeration value="NV" />
+            <xs:enumeration value="NH" />
+            <xs:enumeration value="NJ" />
+            <xs:enumeration value="NM" />
+            <xs:enumeration value="NY" />
+            <xs:enumeration value="NC" />
+            <xs:enumeration value="ND" />
+            <xs:enumeration value="OH" />
+            <xs:enumeration value="OK" />
+            <xs:enumeration value="OR" />
+            <xs:enumeration value="PA" />
+            <xs:enumeration value="RI" />
+            <xs:enumeration value="SC" />
+            <xs:enumeration value="SD" />
+            <xs:enumeration value="TN" />
+            <xs:enumeration value="TX" />
+            <xs:enumeration value="UT" />
+            <xs:enumeration value="VT" />
+            <xs:enumeration value="VA" />
+            <xs:enumeration value="WA" />
+            <xs:enumeration value="WV" />
+            <xs:enumeration value="WI" />
+            <xs:enumeration value="WY" />
+            <xs:enumeration value="AB" />
+            <xs:enumeration value="BC" />
+            <xs:enumeration value="MB" />
+            <xs:enumeration value="NB" />
+            <xs:enumeration value="NL" />
+            <xs:enumeration value="NT" />
+            <xs:enumeration value="NS" />
+            <xs:enumeration value="ON" />
+            <xs:enumeration value="PE" />
+            <xs:enumeration value="QC" />
+            <xs:enumeration value="SK" />
+            <xs:enumeration value="YT" />
+            <xs:enumeration value="NU" />
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:simpleType name="countryTypeEnum">
         <xs:restriction base="xs:string">
@@ -1004,7 +1129,6 @@
         </xs:restriction>
     </xs:simpleType>
 
-
     <xs:simpleType name="string30Type">
         <xs:restriction base="xs:string">
             <xs:maxLength value="30" />
@@ -1038,7 +1162,7 @@
     <xs:simpleType name="noOfAdultsType">
         <xs:restriction base="xs:integer">
             <xs:totalDigits value="2" />
-             </xs:restriction>
+        </xs:restriction>
     </xs:simpleType>
 
     <xs:simpleType name="numberOfPeriods">
@@ -1057,8 +1181,9 @@
     <xs:simpleType name="numberOfRoomsType">
         <xs:restriction base="xs:integer">
             <xs:totalDigits value="2" />
-           </xs:restriction>
+        </xs:restriction>
     </xs:simpleType>
+
     <xs:simpleType name="smokingPreferenceType">
         <xs:restriction base="xs:string">
             <xs:maxLength value="1" />
@@ -1077,7 +1202,6 @@
             <xs:totalDigits value="3" />
         </xs:restriction>
     </xs:simpleType>
-
 
     <xs:simpleType name="lodgingExtraChargeEnum">
         <xs:restriction base="xs:string">
@@ -1162,6 +1286,8 @@
             <xs:enumeration value="COUNTER_PICKUP"/>
             <xs:enumeration value="CURBSIDE_PICKUP"/>
             <xs:enumeration value="LOCKER_PICKUP"/>
+            <xs:enumeration value="STANDARD_SHIPPING"/>
+            <xs:enumeration value="EXPEDITED_SHIPPING"/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -1174,9 +1300,12 @@
             <xs:enumeration value="MARKETPLACE" />
             <xs:enumeration value="IN_STORE_KIOSK" />
             <xs:enumeration value="MIT"/>
+            <xs:enumeration value="SCAN_AND_GO"/>
+            <xs:enumeration value="SMART_TV"/>
         </xs:restriction>
     </xs:simpleType>
-     <xs:simpleType name="productEnrolledEnum">
+
+    <xs:simpleType name="productEnrolledEnum">
         <xs:restriction base="xs:string">
             <xs:enumeration value="GUARPAY1" />
             <xs:enumeration value="GUARPAY2" />
@@ -1198,7 +1327,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-     <xs:simpleType name="time24HourType">
+    <xs:simpleType name="time24HourType">
         <xs:restriction base="xs:string">
             <xs:pattern value="(([01][0-9])|([2][0-3])):[0-5][0-9]" />
         </xs:restriction>

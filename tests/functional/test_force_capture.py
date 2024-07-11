@@ -44,6 +44,17 @@ class TestForceCapture(unittest.TestCase):
         transaction.processingType = 'accountFunding'
         transaction.id = 'ThisIsID'
 
+        # Create accountFundingTransactionData
+        accountfundingtransactiondata = fields.accountFundingTransactionData()
+        accountfundingtransactiondata.receiverLastName = 'Smith'
+        accountfundingtransactiondata.receiverState = 'QC'
+        accountfundingtransactiondata.receiverCountry = 'USA'
+        accountfundingtransactiondata.receiverAccountNumber = '12345678'
+        accountfundingtransactiondata.accountFundingTransactionType = 'rapidMerchantSettlement'
+        accountfundingtransactiondata.receiverAccountNumberType = 'other'
+
+        transaction.accountFundingTransactionData = accountfundingtransactiondata
+
         card = fields.cardType()
         card.number = '4100000000000001'
         card.expDate = '1210'
@@ -104,7 +115,11 @@ class TestForceCapture(unittest.TestCase):
         transaction.orderSource = 'ecommerce'
         transaction.processingType = 'accountFunding'
         transaction.id = 'ThisIsID'
-        transaction.businessIndicator = 'consumerBillPayment'
+        transaction.businessIndicator = 'businessToBusinessTransfer'
+
+        enhancedData = fields.enhancedData()
+        enhancedData.fulfilmentMethodType = 'EXPEDITED_SHIPPING'
+        transaction.enhancedData = enhancedData
 
         card = fields.cardType()
         card.number = '4100000000000001'
@@ -124,7 +139,7 @@ class TestForceCapture(unittest.TestCase):
         transaction.orderSource = 'ecommerce'
         transaction.processingType = 'accountFunding'
         transaction.id = 'ThisIsID'
-        transaction.businessIndicator = 'walletTransfer'
+        transaction.businessIndicator = 'businessDisbursement'
 
         card = fields.cardType()
         card.number = '4100000000000001'
@@ -144,7 +159,7 @@ class TestForceCapture(unittest.TestCase):
         transaction.orderSource = 'ecommerce'
         transaction.processingType = 'accountFunding'
         transaction.id = 'ThisIsID'
-        transaction.businessIndicator = 'walletTransfer'
+        transaction.businessIndicator = 'rapidMerchantSettlement'
 
         card = fields.cardType()
         card.number = '4100000000000001'
@@ -202,7 +217,7 @@ class TestForceCapture(unittest.TestCase):
         transaction.orderSource = 'ecommerce'
         transaction.processingType = 'accountFunding'
         transaction.id = '1234'
-        transaction.businessIndicator = 'consumerBillPayment'
+        transaction.businessIndicator = 'debitPrepaidAccount'
 
         card = fields.cardType()
         card.number = '4100000000000001'
@@ -223,7 +238,7 @@ class TestForceCapture(unittest.TestCase):
         transaction.orderSource = 'ecommerce'
         transaction.processingType = 'accountFunding'
         transaction.id = '1234'
-        transaction.businessIndicator = 'consumerBillPayment'
+        transaction.businessIndicator = 'paymentOfOwnCreditCardBill'
 
         card = fields.cardType()
         card.number = '4100000000000001'

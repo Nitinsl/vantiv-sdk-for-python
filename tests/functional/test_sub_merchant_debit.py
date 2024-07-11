@@ -43,7 +43,7 @@ class TestSubmerchantDebit(unittest.TestCase):
         transaction.fundingSubmerchantId = "value for fundingSubmerchantId"
         transaction.submerchantName = "temp1200"
         transaction.fundsTransferId = "value for fundsTransferId"
-        transaction.amount = 1512
+        transaction.amount = 1512151212
 
         account_info = fields.echeckTypeCtx()
         account_info.accType = 'Savings'

@@ -41,9 +41,9 @@ conf = utils.Configuration()
 
 preliveStatus = "down"
 if "preliveStatus" in os.environ:
-    preliveStatus = os.environ['preliveStatus']
+   preliveStatus = os.environ['preliveStatus']
 else:
-    print("preliveStatus environment variable is not defined. Defaulting to down.")
+   print("preliveStatus environment variable is not defined. Defaulting to down.")
 
 class TestBatch(unittest.TestCase):
 
@@ -97,6 +97,9 @@ class TestBatch(unittest.TestCase):
         authorization.card = card
         authorization.billtoaddress = billtoaddress
         authorization.id = 'thisisid'
+        authorization.businessIndicator = 'agentCashOut'
+        authorization.orderChannel = 'SMART_TV'
+        authorization.fraudCheckAction = 'APPROVED_SKIP_FRAUD_CHECK'
 
         customerInfo = fields.customerInfo()
 
@@ -132,7 +135,7 @@ class TestBatch(unittest.TestCase):
         enhancedData.lineItemData = lineItemDataList
         enhancedData.discountCode = '001'
         enhancedData.discountPercent = '10'
-        enhancedData.fulfilmentMethodType = 'DELIVERY'
+        enhancedData.fulfilmentMethodType = 'STANDARD_SHIPPING'
 
         authorization.enhancedData = enhancedData
 
@@ -161,6 +164,18 @@ class TestBatch(unittest.TestCase):
         authorization.checkoutId = '123tyhgr34'
         authorization.orderChannel = 'PHONE'
         authorization.fraudCheckStatus = 'Not Approved'
+
+        # Create accountFundingTransactionData
+        accountfundingtransactiondata = fields.accountFundingTransactionData()
+        accountfundingtransactiondata.receiverLastName = 'Smith'
+        accountfundingtransactiondata.receiverState = 'AZ'
+        accountfundingtransactiondata.receiverCountry = 'USA'
+        accountfundingtransactiondata.receiverAccountNumber = '1234567890'
+        accountfundingtransactiondata.accountFundingTransactionType = 'walletTransfer'
+        accountfundingtransactiondata.receiverAccountNumberType = 'cardAccount'
+
+        authorization.accountFundingTransactionData = accountfundingtransactiondata
+
         # Add transaction to container
         transactions.add(authorization)
 
@@ -204,6 +219,22 @@ class TestBatch(unittest.TestCase):
         sale.card = card
         sale.billtoaddress = billtoaddress
         sale.id = 'thisisid'
+
+        # Create accountFundingTransactionData
+        accountfundingtransactiondata = fields.accountFundingTransactionData()
+        accountfundingtransactiondata.receiverLastName = 'Smith'
+        accountfundingtransactiondata.receiverState = 'CA'
+        accountfundingtransactiondata.receiverCountry = 'USA'
+        accountfundingtransactiondata.receiverAccountNumber = '12343564'
+        accountfundingtransactiondata.receiverAccountNumberType = 'RTNAndBAN'
+        accountfundingtransactiondata.accountFundingTransactionType = 'businessDisbursement'
+
+        sale.accountFundingTransactionData = accountfundingtransactiondata
+        sale.fraudCheckAction = 'APPROVED_SKIP_FRAUD_CHECK'
+        sale.businessIndicator = 'rapidMerchantSettlement'
+        sale.orderChannel = 'SMART_TV'
+
+
         # Add pinless debit request
         pinless_debit = fields.pinlessDebitRequestType()
         preferred_network = fields.preferredDebitNetworksType()
@@ -292,11 +323,26 @@ class TestBatch(unittest.TestCase):
         authorization = fields.authorization()
         authorization.orderId = '1'
         authorization.amount = 10010
-        authorization.reportGroup = u'русский中文'
+        authorization.reportGroup = 'Planets'
         authorization.orderSource = 'ecommerce'
         authorization.card = card
         authorization.billtoaddress = billtoaddress
         authorization.id = 'thisisid'
+        authorization.businessIndicator = 'businessToBusinessTransfer'
+        authorization.orderChannel = 'SCAN_AND_GO'
+        authorization.fraudCheckAction = 'DECLINED_NEED_FRAUD_CHECK'
+
+        # Create accountFundingTransactionData
+        accountfundingtransactiondata = fields.accountFundingTransactionData()
+        accountfundingtransactiondata.receiverLastName = 'Stephen'
+        accountfundingtransactiondata.receiverState = 'CA'
+        accountfundingtransactiondata.receiverCountry = 'USA'
+        accountfundingtransactiondata.receiverAccountNumber = '4987335624'
+        accountfundingtransactiondata.receiverAccountNumberType = 'walletID'
+        accountfundingtransactiondata.accountFundingTransactionType = 'payrollDisbursement'
+
+        authorization.accountFundingTransactionData = accountfundingtransactiondata
+
         # Add transaction to container
         transactions.add(authorization)
 
@@ -321,6 +367,11 @@ class TestBatch(unittest.TestCase):
         sale.card = card
         sale.billtoaddress = billtoaddress
         sale.id = 'thisisid'
+        sale.accountFundingTransactionData = accountfundingtransactiondata
+        sale.fraudCheckAction = 'APPROVED_SKIP_FRAUD_CHECK'
+        sale.businessIndicator = 'rapidMerchantSettlement'
+        sale.orderChannel = 'SMART_TV'
+
         # Add transaction to container
         transactions.add(sale)
 
@@ -351,6 +402,10 @@ class TestBatch(unittest.TestCase):
             if tried > 20:
                 self.fail("Timeout for retrieve batch response")
                 break
+
+        enhancedData = fields.enhancedData()
+        enhancedData.fulfilmentMethodType = 'STANDARD_SHIPPING'
+        transactions.enhancedData = enhancedData
 
         transactions = batch.Transactions()
         transactions.add(RFRRequest)
@@ -387,6 +442,17 @@ class TestBatch(unittest.TestCase):
                     'amount': '100',
                     'orderSource': 'ecommerce',
                     'id': 'thisisid',
+                    'accountFundingTransactionData': {
+                        'receiverLastName': 'Smith',
+                        'receiverState': 'CA',
+                        'receiverCountry': 'USA',
+                        'receiverAccountNumber': '12343564',
+                        'receiverAccountNumberType': 'RTNAndBAN',
+                        'accountFundingTransactionType': 'businessDisbursement'
+                    },
+                    'fraudCheckAction': 'APPROVED_SKIP_FRAUD_CHECK',
+                    'businessIndicator': 'rapidMerchantSettlement',
+                    'orderChannel': 'SMART_TV',
                     'card': {
                         'expDate': '1210',
                         'number': '4457010000000009',
@@ -442,6 +508,17 @@ class TestBatch(unittest.TestCase):
                     'amount': '106',
                     'orderSource': 'ecommerce',
                     'id': 'thisisid',
+                    'accountFundingTransactionData': {
+                        'receiverLastName': 'Smith',
+                        'receiverState': 'CA',
+                        'receiverCountry': 'USA',
+                        'receiverAccountNumber': '12343564',
+                        'receiverAccountNumberType': 'RTNAndBAN',
+                        'accountFundingTransactionType': 'businessDisbursement'
+                    },
+                    'fraudCheckAction': 'APPROVED_SKIP_FRAUD_CHECK',
+                    'businessIndicator': 'rapidMerchantSettlement',
+                    'orderChannel': 'SMART_TV',
                     'card': {
                         'expDate': '1210',
                         'number': '4457010000000009',
@@ -465,12 +542,12 @@ class TestBatch(unittest.TestCase):
                     # }
                 }
             ],
-            'translateToLowValueTokenRequest': {
-                'reportGroup': 'Planets',
-                'orderId': '12344',
-                'id': 'thisisid',
-                'token': 'g45a684fw54f'
-            }
+            #'translateToLowValueTokenRequest': {
+            #    'reportGroup': 'Planets',
+            #    'orderId': '12344',
+            #    'id': 'thisisid',
+            #    'token': 'g45a684fw54f'
+            #}
         }
 
         filename = 'batch_test_%s' % datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")
@@ -658,6 +735,30 @@ class TestBatch(unittest.TestCase):
         txnRev.orderSource = 'ecommerce'
         txnRev.id = 'thisisid'
         txnRev.pin = '123456'
+
+        detailTaxList = list()
+        detailTax = fields.detailTax()
+        detailTax.taxAmount = 100
+        detailTax2 = fields.detailTax()
+        detailTax2.taxAmount = 200
+        detailTaxList.append(detailTax)
+        detailTaxList.append(detailTax2)
+        lineItemDataList = list()
+        lineItemData = fields.lineItemData()
+        lineItemData.itemDescription = 'des'
+        lineItemData.itemCategory = 'Chock'
+        lineItemData.itemCategory = 'Chock'
+        lineItemData.itemSubCategory = 'pen'
+        lineItemData.productId = '001'
+        lineItemData.productName = 'prod'
+        lineItemDataList.append(lineItemData)
+        enhancedData = fields.enhancedData()
+        enhancedData.detailTax = detailTaxList
+        enhancedData.lineItemData = lineItemDataList
+        enhancedData.discountCode = '001'
+        enhancedData.discountPercent = '10'
+        enhancedData.fulfilmentMethodType = 'STANDARD_SHIPPING'
+
         txnBatch.add(txnRev)
 
         filename = 'batch_test_%s' % datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")
@@ -1189,6 +1290,235 @@ class TestBatch(unittest.TestCase):
                 self.assertEqual(1100, obj.batchRequest[0].saleAmount)
 
             self.assertEqual('%s.xml.asc' % filename, response)
+
+    @unittest.skipIf(preliveStatus.lower() == 'down', "prelive not available")
+    def test_batch_sub_merchant_credit_debit_vendor_credit_debit_v12_37(self):
+        txnBatch = batch.Transactions()
+        authorization = fields.authorization()
+        authorization.id = '1'
+        authorization.customerId = 'Cust0403'
+        authorization.reportGroup = 'Default Report Group'
+        authorization.orderId = '12344401'
+        authorization.amount = 1061512151
+        authorization.orderSource = 'ecommerce'
+        card = fields.cardType()
+        card.number = '4100000000000000'
+        card.expDate = '1210'
+        card.type = 'VI'
+        authorization.card = card
+        authorization.orderChannel = 'MIT'
+        authorization.authIndicator = 'Estimated'
+        authorization.businessIndicator = 'agentCashOut'
+        authorization.orderChannel = 'SMART_TV'
+        authorization.fraudCheckAction = 'APPROVED_SKIP_FRAUD_CHECK'
+        # Create accountFundingTransactionData
+        accountfundingtransactiondata = fields.accountFundingTransactionData()
+        accountfundingtransactiondata.receiverLastName = 'Smith'
+        accountfundingtransactiondata.receiverState = 'AZ'
+        accountfundingtransactiondata.receiverCountry = 'USA'
+        accountfundingtransactiondata.receiverAccountNumber = '1234567890'
+        accountfundingtransactiondata.accountFundingTransactionType = 'walletTransfer'
+        accountfundingtransactiondata.receiverAccountNumberType = 'cardAccount'
+        authorization.accountFundingTransactionData = accountfundingtransactiondata
+
+        customerInfo = fields.customerInfo()
+
+        customerInfo.accountUserName = 'Jack'
+        customerInfo.userAccountNumber = '1234'
+        customerInfo.userAccountEmail = 'gmail@gmail.com'
+        customerInfo.membershipId = '11111'
+        customerInfo.membershipPhone = '123456'
+        customerInfo.membershipEmail = 'gmail@gmail.com'
+        customerInfo.membershipName = 'fran'
+        customerInfo.accountCreatedDate = datetime.datetime.now().strftime("%Y-%m-%d")
+        customerInfo.userAccountPhone = '000461223'
+
+        authorization.customerInfo = customerInfo
+
+        detailTaxList = list()
+        detailTax = fields.detailTax()
+        detailTax.taxAmount = 100
+        detailTax2 = fields.detailTax()
+        detailTax2.taxAmount = 200
+        detailTaxList.append(detailTax)
+        detailTaxList.append(detailTax2)
+        lineItemDataList = list()
+        lineItemData = fields.lineItemData()
+        lineItemData.itemDescription = 'des'
+        lineItemData.itemCategory = 'Chock'
+        lineItemData.itemCategory = 'Chock'
+        lineItemData.itemSubCategory = 'pen'
+        lineItemData.productId = '001'
+        lineItemData.productName = 'prod'
+        lineItemDataList.append(lineItemData)
+        enhancedData = fields.enhancedData()
+        enhancedData.detailTax = detailTaxList
+        enhancedData.lineItemData = lineItemDataList
+        enhancedData.discountCode = '001'
+        enhancedData.discountPercent = '10'
+        enhancedData.fulfilmentMethodType = 'STANDARD_SHIPPING'
+
+        authorization.enhancedData = enhancedData
+
+        txnBatch.add(authorization)
+
+        capture = fields.capture()
+        capture.cnpTxnId = 123456000
+        capture.orderId = '457754'
+        capture.amount = 6000
+        capture.id = 'ID001'
+        card = fields.cardType()
+        card.number = '4100100000000000'
+        card.expDate = '1210'
+        card.type = 'VI'
+        capture.card = card
+        capture.foreignRetailerIndicator = 'F'
+        enhancedData.fulfilmentMethodType = 'EXPEDITED_SHIPPING'
+        capture.enhancedData=enhancedData
+        txnBatch.add(capture)
+
+        forceCapture = fields.forceCapture()
+        forceCapture.reportGroup = 'Default Report Group'
+        forceCapture.orderId = '12345'
+        forceCapture.amount = 7000
+        forceCapture.orderSource = 'ecommerce'
+        forceCapture.processingType = 'accountFunding'
+        forceCapture.id = '54321'
+        forceCapture.businessIndicator = 'businessToBusinessTransfer'
+        card = fields.cardType()
+        card.number = '4100000000000001'
+        card.expDate = '1210'
+        card.type = 'VI'
+        forceCapture.card = card
+        forceCapture.foreignRetailerIndicator = 'F'
+        enhancedData.fulfilmentMethodType = 'EXPEDITED_SHIPPING'
+        forceCapture.enhancedData = enhancedData
+        txnBatch.add(forceCapture)
+
+        captureGivenAuth = fields.captureGivenAuth()
+        captureGivenAuth.orderId = '77373'
+        captureGivenAuth.amount = 2000
+        captureGivenAuth.orderSource = 'ecommerce'
+        captureGivenAuth.id = 'NewTxnID'
+        captureGivenAuth.businessIndicator = 'governmentNonProfitDisbursement'
+        card = fields.cardType()
+        card.number = '4100000000000000'
+        card.expDate = '1210'
+        card.type = 'VI'
+        # The type of card is cardType
+        captureGivenAuth.card = card
+        captureGivenAuth.foreignRetailerIndicator = 'F'
+        txnBatch.add(captureGivenAuth)
+
+        sale = fields.sale()
+        sale.id = 'auth_GP_DI'
+        sale.reportGroup = 'DirectWFITxn'
+        sale.orderId = 'XGR-1840823423'
+        sale.amount = 1100
+        sale.orderSource = 'telephone'
+        card = fields.cardType()
+        card.number = '4100000000000000'
+        card.expDate = '1210'
+        card.type = 'VI'
+        sale.card = card
+        sale.orderChannel = 'SMART_TV'
+        sale.foreignRetailerIndicator = 'F'
+        sale.businessIndicator = 'rapidMerchantSettlement'
+        sale.accountFundingTransactionData = accountfundingtransactiondata
+        sale.fraudCheckAction = 'APPROVED_SKIP_FRAUD_CHECK'
+        enhancedData.fulfilmentMethodType = 'STANDARD_SHIPPING'
+        sale.enhancedData = enhancedData
+        txnBatch.add(sale)
+
+        submerchantcredit = fields.submerchantCredit()
+        submerchantcredit.id = 'ThisIsID'
+        submerchantcredit.reportGroup = 'Default Report Group'
+        submerchantcredit.fundingSubmerchantId = "value for fundingSubmerchantId"
+        submerchantcredit.submerchantName = "temp1200"
+        submerchantcredit.fundsTransferId = "value for fundsTransferId"
+        submerchantcredit.amount = 1512
+        account_info = fields.echeckTypeCtx()
+        account_info.accType = 'Savings'
+        account_info.accNum = "1234"
+        account_info.routingNum = "12345678"
+        submerchantcredit.accountInfo = account_info
+        submerchantcredit.customIdentifier = '127'
+        txnBatch.add(submerchantcredit)
+
+        submerchantdebit = fields.submerchantDebit()
+        submerchantdebit.id = 'ThisIsID'
+        submerchantdebit.reportGroup = 'Default Report Group'
+        submerchantdebit.fundingSubmerchantId = "value for fundingSubmerchantId"
+        submerchantdebit.submerchantName = "temp1200"
+        submerchantdebit.fundsTransferId = "value for fundsTransferId"
+        submerchantdebit.amount = 1512151212
+        submerchantdebit.accountInfo = account_info
+        submerchantdebit.customIdentifier = '123'
+        txnBatch.add(submerchantdebit)
+
+        vendordebit = fields.vendorDebit()
+        vendordebit.id = 'ThisIsID'
+        vendordebit.reportGroup = 'Default Report Group'
+        vendordebit.fundingSubmerchantId = "value for fundingSubmerchantId"
+        vendordebit.submerchantName = "temp1200"
+        vendordebit.fundsTransferId = "value for fundsTransferId"
+        vendordebit.amount = 1512151212
+        vendordebit.accountInfo = account_info
+        vendordebit.customIdentifier = '123'
+        txnBatch.add(vendordebit)
+
+        vendorcredit = fields.vendorCredit()
+        vendorcredit.id = 'ThisIsID'
+        vendorcredit.reportGroup = 'Default Report Group'
+        vendorcredit.fundingSubmerchantId = "value for fundingSubmerchantId"
+        vendorcredit.submerchantName = "temp1200"
+        vendorcredit.fundsTransferId = "value for fundsTransferId"
+        vendorcredit.amount = 1512151
+        vendorcredit.accountInfo = account_info
+        vendorcredit.customIdentifier = '123'
+        txnBatch.add(vendorcredit)
+
+        filename = 'batch_test_%s' % datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")
+        # stream to Vaitiv eCommerce and get object as response
+        response = batch.submit(txnBatch, conf, filename)
+
+        if conf.useEncryption:
+            # Using encryption.
+            retry = True
+            tried = 0
+            withEncryptionReponseFilepath = ''
+            while retry:
+                tried += 1
+                try:
+                    withEncryptionReponseFilepath = batch._get_file_from_sftp(response, conf, False, 60)
+                    retry = False
+                except:
+                    # sleep 1 minute waiting for batch get processed
+                    print("sleep 30 seconds waiting for batch get processed")
+                    time.sleep(30)
+                if tried > 20:
+                    self.fail("Timeout for retrieve batch response")
+                    break
+
+            call(["cat", withEncryptionReponseFilepath])
+            ### <<< WITH ENCRYPTION
+
+            with open(withEncryptionReponseFilepath, 'r') as xml_file:
+                obj = fields.CreateFromDocument(xml_file.read())
+                self.assertEquals("Valid Format", obj.message)
+
+        else:
+            with open(os.path.join(conf.batch_requests_path, '%s.xml' % filename), 'r') as xml_file:
+                obj = fields.CreateFromDocument(xml_file.read())
+                self.assertEquals(1, obj.numBatchRequests)
+                self.assertEquals(1061512151, obj.batchRequest[0].authAmount)
+                self.assertEquals(6000, obj.batchRequest[0].captureAmount)
+                self.assertEquals(2000, obj.batchRequest[0].captureGivenAuthAmount)
+                self.assertEquals(7000, obj.batchRequest[0].forceCaptureAmount)
+                self.assertEquals(1100, obj.batchRequest[0].saleAmount)
+
+            self.assertEquals('%s.xml.asc' % filename, response)
+
 
 if __name__ == '__main__':
     unittest.main()

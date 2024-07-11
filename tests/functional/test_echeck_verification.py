@@ -48,6 +48,7 @@ class TestEcheckVerification(unittest.TestCase):
         echeck.routingNum = '123456789'
         echeck.checkNum = '123455'
         echeck.accType = 'Checking'
+        echeck.accountId = '12345678'
         transaction.echeck = echeck
 
         billtoaddress = fields.contact()

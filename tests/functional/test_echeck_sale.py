@@ -58,6 +58,8 @@ class TestEcheckSale(unittest.TestCase):
         echeck.routingNum = '123456789'
         echeck.checkNum = '123455'
         echeck.accType = 'Checking'
+        echeck.echeckCustomerId='customer_v12.34'
+        echeck.accountId = 'account'
         transaction.echeck = echeck
 
         billtoaddress = fields.contact()
@@ -112,6 +114,7 @@ class TestEcheckSale(unittest.TestCase):
         echeck.checkNum = '123455'
         echeck.accType = 'Checking'
         echeck.ccdPaymentInformation = '12345678901234567890123456789012345678901234567890123456789012345678901234567890'
+        echeck.echeckCustomerId = "customer_v12.34"
         transaction.echeck = echeck
 
         billtoaddress = fields.contact()

@@ -51,6 +51,17 @@ class TestSale(unittest.TestCase):
 
         transaction.card = card
 
+        # Create accountFundingTransactionData
+        accountfundingtransactiondata = fields.accountFundingTransactionData()
+        accountfundingtransactiondata.receiverLastName = 'Smith'
+        accountfundingtransactiondata.receiverState = 'CA'
+        accountfundingtransactiondata.receiverCountry = 'USA'
+        accountfundingtransactiondata.receiverAccountNumber = '12343564'
+        accountfundingtransactiondata.receiverAccountNumberType = 'RTNAndBAN'
+        accountfundingtransactiondata.accountFundingTransactionType = 'businessDisbursement'
+
+        transaction.accountFundingTransactionData = accountfundingtransactiondata
+
         response = online.request(transaction, conf)
         self.assertEquals('000', response['saleResponse']['response'])
         self.assertEquals('sandbox', response['saleResponse']['location'])
@@ -260,6 +271,7 @@ class TestSale(unittest.TestCase):
         transaction.originalNetworkTransactionId = '9876543210'
         transaction.originalTransactionAmount = 53698
         transaction.id = 'ThisIsID'
+        transaction.fraudCheckAction = 'APPROVED_SKIP_FRAUD_CHECK'
 
         card = fields.cardType()
         card.number = '4100000000000000'
@@ -496,7 +508,7 @@ class TestSale(unittest.TestCase):
         transaction.amount = 106
         transaction.orderSource = 'ecommerce'
         transaction.id = 'ThisIsID'
-        transaction.businessIndicator = 'consumerBillPayment'
+        transaction.businessIndicator = 'rapidMerchantSettlement'
 
         card = fields.cardType()
         card.number = '4100000000000000'
@@ -517,8 +529,9 @@ class TestSale(unittest.TestCase):
         transaction.orderSource = 'ecommerce'
         transaction.id = 'ThisIsID'
         transaction.crypto = False
-        transaction.businessIndicator = 'consumerBillPayment'
+        transaction.businessIndicator = 'agentCashOut'
         transaction.orderChannelEnum = 'PHONE'
+        transaction.orderChannel = 'SMART_TV'
 
         transaction.fraudCheckStatus = 'not approved'
 
@@ -560,7 +573,7 @@ class TestSale(unittest.TestCase):
         transaction.amount = 106
         transaction.orderSource = 'ecommerce'
         transaction.id = 'ThisIsID'
-        transaction.businessIndicator = 'consumerBillPayment'
+        transaction.businessIndicator = 'agentCashOut'
 
         card = fields.cardType()
         card.number = '4100000000000000'
@@ -602,7 +615,7 @@ class TestSale(unittest.TestCase):
         transaction.amount = 106
         transaction.orderSource = 'ecommerce'
         transaction.id = 'ThisIsID'
-        transaction.businessIndicator = 'consumerBillPayment'
+        transaction.businessIndicator = 'paymentOfOwnCreditCardBill'
 
         transport_data = fields.passengerTransportData()
         transport_data.passengerName = 'Post Malone123'
@@ -660,7 +673,7 @@ class TestSale(unittest.TestCase):
         transaction.amount = 106
         transaction.orderSource = 'ecommerce'
         transaction.id = 'ThisIsID'
-        transaction.businessIndicator = 'consumerBillPayment'
+        transaction.businessIndicator = 'paymentOfOwnCreditCardBill'
 
         card = fields.cardType()
         card.number = '4100100000000000'
@@ -679,7 +692,7 @@ class TestSale(unittest.TestCase):
         transaction.amount = 106
         transaction.orderSource = 'ecommerce'
         transaction.id = 'ThisIsID'
-        transaction.businessIndicator = 'consumerBillPayment'
+        transaction.businessIndicator = 'governmentNonProfitDisbursement'
 
         card = fields.cardType()
         card.number = '4100100000000000'
@@ -833,7 +846,7 @@ class TestSale(unittest.TestCase):
         transaction.amount = 3000
         transaction.orderSource = 'ecommerce'
         transaction.id = 'ThisIsID'
-        transaction.businessIndicator = 'fundTransfer'
+        transaction.businessIndicator = 'personToPersonCardAccount'
 
         card = fields.cardType()
         card.number = '4100000000000000'
@@ -876,7 +889,7 @@ class TestSale(unittest.TestCase):
         transaction.amount = 100
         transaction.orderSource = 'ecommerce'
         transaction.id = 'ThisIsID'
-        transaction.businessIndicator = 'fundTransfer'
+        transaction.businessIndicator = 'businessToBusinessTransfer'
         card = fields.cardType()
         card.number = '4457010000000009'
         card.expDate = '1210'
@@ -905,6 +918,7 @@ class TestSale(unittest.TestCase):
         lineItemDataList.append(lineItemData)
         enhancedData = fields.enhancedData()
         enhancedData.lineItemData = lineItemDataList
+        enhancedData.fulfilmentMethodType = 'STANDARD_SHIPPING'
         transaction.enhancedData = enhancedData
         response = online.request(transaction, conf)
         self.assertEqual('000', response['saleResponse']['response'])

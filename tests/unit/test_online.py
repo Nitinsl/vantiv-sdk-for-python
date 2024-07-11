@@ -1308,6 +1308,445 @@ class TestOnline(unittest.TestCase):
         self.assertEquals("000", response['authorizationResponse']['response'])
         self.assertEquals('575381357169267851', response['authorizationResponse']['cnpTxnId'])
 
+    @mock.patch.object(online, '_http_post')
+    def test_simple_auth_v12_37(self,mock__http_post):
+        authorization = fields.authorization()
+        authorization.reportGroup = 'Planets'
+        authorization.orderId = '12344'
+        authorization.amount = 106
+        authorization.orderSource = 'ecommerce'
+        authorization.id = 'thisisid'
+
+        # Create accountFundingTransactionData
+        accountfundingtransactiondata = fields.accountFundingTransactionData()
+        accountfundingtransactiondata.receiverLastName = 'Smith'
+        accountfundingtransactiondata.receiverState = 'AZ'
+        accountfundingtransactiondata.receiverCountry = 'USA'
+        accountfundingtransactiondata.receiverAccountNumber = '1234567890'
+        accountfundingtransactiondata.accountFundingTransactionType = 'walletTransfer'
+        accountfundingtransactiondata.receiverAccountNumberType = 'cardAccount'
+
+        authorization.accountFundingTransactionData = accountfundingtransactiondata
+
+        card = fields.cardType()
+        card.number = '4100000000000000'
+        card.expDate = '1210'
+        card.type = 'VI'
+
+        authorization.card = card
+
+        customerInfo = fields.customerInfo()
+
+        customerInfo.accountUserName = 'Jack'
+        customerInfo.userAccountNumber = '1234'
+        customerInfo.userAccountEmail = 'gmail@gmail.com'
+        customerInfo.membershipId = '11111'
+        customerInfo.membershipPhone = '123456'
+        customerInfo.membershipEmail = 'gmail@gmail.com'
+        customerInfo.membershipName = 'fran'
+        customerInfo.accountCreatedDate = datetime.datetime.now().strftime("%Y-%m-%d")
+        customerInfo.userAccountPhone = '000461223'
+
+        authorization.customerInfo = customerInfo
+
+        detailTaxList = list()
+        detailTax = fields.detailTax()
+        detailTax.taxAmount = 100
+        detailTax2 = fields.detailTax()
+        detailTax2.taxAmount = 200
+        detailTaxList.append(detailTax)
+        detailTaxList.append(detailTax2)
+        lineItemDataList = list()
+        lineItemData = fields.lineItemData()
+        lineItemData.itemDescription = 'des'
+        lineItemData.itemCategory = 'Chock'
+        lineItemData.itemCategory = 'Chock'
+        lineItemData.itemSubCategory = 'pen'
+        lineItemData.productId = '001'
+        lineItemData.productName = 'prod'
+        lineItemDataList.append(lineItemData)
+        enhancedData = fields.enhancedData()
+        enhancedData.detailTax = detailTaxList
+        enhancedData.lineItemData = lineItemDataList
+        enhancedData.discountCode = '001'
+        enhancedData.discountPercent = '10'
+        enhancedData.fulfilmentMethodType = 'STANDARD_SHIPPING'
+        authorization.enhancedData = enhancedData
+
+        mock__http_post.return_value = """<cnpOnlineResponse version='12.37' response='1' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'>
+                      </cnpOnlineResponse>
+                              """
+        self.assertRaises(utils.VantivException, online.request, authorization, conf, 'dict')
+
+        mock__http_post.return_value = """<cnpOnlineResponse xmlns="http://www.vantivcnp.com/schema" version="12.37" response="0" message="Valid Format">
+                                                  <authorizationResponse id="1" reportGroup="Default Report Group">
+                                                    <cnpTxnId>575381357169267851</cnpTxnId>
+                                                    <orderId>12344401</orderId>
+                                                    <response>000</response>
+                                                    <message>Approved</message>
+                                                    <responseTime>2023-12-21T08:19:43.17</responseTime>
+                                                    <authCode>04227</authCode>
+                                                    <networkTransactionId>63225578415568556365452427825</networkTransactionId>
+                                                    <location>sandbox</location>
+                                                  </authorizationResponse>
+                                                </cnpOnlineResponse>"""
+
+        response = online.request(authorization, conf)
+        self.assertEquals("000", response['authorizationResponse']['response'])
+        self.assertEquals('575381357169267851', response['authorizationResponse']['cnpTxnId'])
+
+    @mock.patch.object(online, '_http_post')
+    def test_simple_sale_v12_37(self,mock__http_post):
+        transaction = fields.sale()
+        transaction.reportGroup = 'Planets'
+        transaction.orderId = '12344'
+        transaction.amount = 106
+        transaction.orderSource = 'ecommerce'
+        transaction.id = 'ThisIsID'
+        transaction.fraudCheckAction = 'APPROVED_SKIP_FRAUD_CHECK'
+        transaction.orderChannel = 'SMART_TV'
+        transaction.businessIndicator = 'agentCashOut'
+        seller_info = fields.sellerInfo()
+        seller_info.accountNumber = '4485581000000005'
+        seller_info.aggregateOrderCount = '4'
+        seller_info.aggregateOrderDollars = '104'
+        seller_address = fields.sellerAddress()
+        seller_address.sellerStreetaddress = '15 Main Street'
+        seller_address.sellerUnit = '100 AB'
+        seller_address.sellerPostalcode = '12345'
+        seller_address.sellerCity = 'San Jose'
+        seller_address.sellerProvincecode = 'MA'
+        seller_address.sellerCountrycode = 'US'
+        seller_info.sellerAddress = seller_address
+        seller_info.createdDate = '2015-11-12T20:33:09'
+        seller_info.domain = 'vap'
+        seller_info.email = 'bob@example.com'
+        seller_info.lastUpdateDate = '2015-11-12T20:33:09'
+        seller_info.name = 'bob'
+        seller_info.onboardingEmail = 'bob@example.com'
+        seller_info.onboardingIpAddress = '75.100.88.78'
+        seller_info.parentEntity = 'abc'
+        seller_info.phone = '9785510040'
+        seller_info.sellerId = '123456789'
+        seller_tags = fields.sellerTagsType
+        seller_tags.tag = '2'
+        seller_info.seller_tags = seller_tags
+        seller_info.username = 'bob123'
+        transaction.seller_info = seller_info
+        lineItemDataList = list()
+        lineItemData = fields.lineItemData()
+        lineItemData.itemDescription = 'des'
+        lineItemData.itemCategory = 'Chock'
+        lineItemData.itemCategory = 'Chock'
+        lineItemData.itemSubCategory = 'pen'
+        lineItemData.productId = '001'
+        lineItemData.productName = 'prod'
+        lineItemData.shipmentId = 'prod1234'
+        sub = fields.subscription()
+        sub.subscriptionId = '567'
+        sub.nextDeliveryDate = datetime.datetime.now().strftime("%Y-%m-%d")
+        sub.periodUnit = 'WEEK'
+        sub.numberOfPeriods = '100'
+        sub.regularItemPrice = 176
+        sub.currentPeriod = '506'
+        lineItemData.subscription = sub
+        lineItemDataList.append(lineItemData)
+        enhancedData = fields.enhancedData()
+        enhancedData.lineItemData = lineItemDataList
+        enhancedData.fulfilmentMethodType = 'STANDARD_SHIPPING'
+        transaction.enhancedData = enhancedData
+
+        card = fields.cardType()
+        card.number = '4100000000000000'
+        card.expDate = '1210'
+        card.type = 'VI'
+
+        transaction.card = card
+
+        # Create accountFundingTransactionData
+        accountfundingtransactiondata = fields.accountFundingTransactionData()
+        accountfundingtransactiondata.receiverLastName = 'Smith'
+        accountfundingtransactiondata.receiverState = 'CA'
+        accountfundingtransactiondata.receiverCountry = 'USA'
+        accountfundingtransactiondata.receiverAccountNumber = '12343564'
+        accountfundingtransactiondata.receiverAccountNumberType = 'RTNAndBAN'
+        accountfundingtransactiondata.accountFundingTransactionType = 'businessDisbursement'
+
+        transaction.accountFundingTransactionData = accountfundingtransactiondata
+
+        mock__http_post.return_value = """<cnpOnlineResponse version='12.37' response='1' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'>
+                              </cnpOnlineResponse>
+                                      """
+        self.assertRaises(utils.VantivException, online.request, transaction, conf, 'dict')
+
+        mock__http_post.return_value = """<cnpOnlineResponse xmlns="http://www.vantivcnp.com/schema" version="12.37" response="0" message="Valid Format">
+                                                          <saleResponse id="1" reportGroup="Default Report Group">
+                                                            <cnpTxnId>575381357169267851</cnpTxnId>
+                                                            <orderId>12344401</orderId>
+                                                            <response>000</response>
+                                                            <message>Approved</message>
+                                                            <responseTime>2023-12-21T08:19:43.17</responseTime>
+                                                            <authCode>04227</authCode>
+                                                            <networkTransactionId>63225578415568556365452427825</networkTransactionId>
+                                                            <location>sandbox</location>
+                                                          </saleResponse>
+                                                        </cnpOnlineResponse>"""
+
+        response = online.request(transaction, conf)
+        self.assertEquals('000', response['saleResponse']['response'])
+        self.assertEquals('sandbox', response['saleResponse']['location'])
+
+    @mock.patch.object(online, '_http_post')
+    def test_simple_bnpl_auth(self,mock__http_post):
+
+        transaction = fields.BNPLAuthorizationRequest()
+        transaction.reportGroup = "ThisIsAGroup"
+        transaction.amount = "5000"
+        transaction.orderId = "154646587"
+        transaction.id = "1234"
+        transaction.provider = 'AFFIRM'
+        transaction.postCheckoutRedirectUrl = 'http://www.vantivcnp.com/schema'
+
+        customerInfo = fields.customerInfo()
+        customerInfo.accountUserName = 'Jack'
+        customerInfo.userAccountNumber = '1234'
+        customerInfo.userAccountEmail = 'gmail@gmail.com'
+        customerInfo.membershipId = '11111'
+        customerInfo.membershipPhone = '123456'
+        customerInfo.membershipEmail = 'gmail@gmail.com'
+        customerInfo.membershipName = 'fran'
+        customerInfo.accountCreatedDate = datetime.datetime.now().strftime("%Y-%m-%d")
+        customerInfo.userAccountPhone = '000461223'
+        transaction.customerInfo = customerInfo
+
+        billtoaddress = fields.contact()
+        billtoaddress.firstName = 'Peter'
+        billtoaddress.lastName = 'Green'
+        billtoaddress.companyName = 'Green Co'
+        billtoaddress.phone = '999-999-9999'
+        transaction.billToAddress = billtoaddress
+        transaction.shipToAddress = billtoaddress
+
+        detailTaxList = list()
+        detailTax = fields.detailTax()
+        detailTax.taxAmount = 100
+        detailTax2 = fields.detailTax()
+        detailTax2.taxAmount = 200
+        detailTaxList.append(detailTax)
+        detailTaxList.append(detailTax2)
+
+        enhancedData = fields.enhancedData()
+        enhancedData.detailTax = detailTaxList
+        transaction.enhancedData = enhancedData
+
+        mock__http_post.return_value = """<cnpOnlineResponse version='12.37' response='1' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'>
+                                      </cnpOnlineResponse>
+                                              """
+        self.assertRaises(utils.VantivException, online.request, transaction, conf, 'dict')
+
+        mock__http_post.return_value = """<cnpOnlineResponse xmlns="http://www.vantivcnp.com/schema" version="12.37" response="0" message="Valid Format">
+                      <BNPLAuthResponse id="1234" reportGroup="ThisIsAGroup">
+                        <cnpTxnId>982013290412531237</cnpTxnId>
+                        <response>000</response>
+                        <responseTime>2024-07-10T06:13:41.528</responseTime>
+                        <message>Approved</message>
+                        <location>sandbox</location>
+                        <checkoutUrl>www.google.com</checkoutUrl>
+                      </BNPLAuthResponse>
+                    </cnpOnlineResponse>"""
+
+        response = online.request(transaction, conf)
+        self.assertEqual('000', response['BNPLAuthResponse']['response'])
+        self.assertEqual('Approved', response['BNPLAuthResponse']['message'])
+
+    @mock.patch.object(online, '_http_post')
+    def test_simple_bnpl_cancel(self,mock__http_post):
+
+        transaction = fields.BNPLCancelRequest()
+        transaction.reportGroup = "ThisIsAGroup"
+        transaction.amount = "5000"
+        transaction.orderId = "154646587"
+        transaction.id = "1234"
+        transaction.cnpTxnId = '123456789'
+
+        mock__http_post.return_value = """<cnpOnlineResponse version='12.37' response='1' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'>
+                                              </cnpOnlineResponse>
+                                                      """
+        self.assertRaises(utils.VantivException, online.request, transaction, conf, 'dict')
+
+        mock__http_post.return_value = """<cnpOnlineResponse xmlns="http://www.vantivcnp.com/schema" version="12.37" response="0" message="Valid Format">
+                              <BNPLCancelResponse id="1234" reportGroup="ThisIsAGroup">
+                                <cnpTxnId>124129516233853681</cnpTxnId>
+                                <response>000</response>
+                                <responseTime>2024-07-10T06:39:35.969</responseTime>
+                                <message>Approved</message>
+                                <location>sandbox</location>
+                              </BNPLCancelResponse>
+                            </cnpOnlineResponse>"""
+
+        response = online.request(transaction, conf)
+        self.assertEqual('000', response['BNPLCancelResponse']['response'])
+        self.assertEqual('Approved', response['BNPLCancelResponse']['message'])
+
+    @mock.patch.object(online, '_http_post')
+    def test_simple_bnpl_capture(self,mock__http_post):
+
+        transaction = fields.BNPLCaptureRequest()
+        transaction.reportGroup = "ThisIsAGroup"
+        transaction.amount = "5000"
+        transaction.orderId = "154646587"
+        transaction.id = "1234"
+        transaction.cnpTxnId = '123456789'
+
+        mock__http_post.return_value = """<cnpOnlineResponse version='12.37' response='1' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'>
+                                                      </cnpOnlineResponse>
+                                                              """
+        self.assertRaises(utils.VantivException, online.request, transaction, conf, 'dict')
+
+        mock__http_post.return_value = """<cnpOnlineResponse xmlns="http://www.vantivcnp.com/schema" version="12.37" response="0" message="Valid Format">
+                                  <BNPLCaptureResponse id="1234" reportGroup="ThisIsAGroup">
+                                    <cnpTxnId>512634157534045584</cnpTxnId>
+                                    <response>000</response>
+                                    <responseTime>2024-07-10T06:46:16.785</responseTime>
+                                    <message>Approved</message>
+                                    <location>sandbox</location>
+                                  </BNPLCaptureResponse>
+                                </cnpOnlineResponse>"""
+
+        response = online.request(transaction, conf)
+        self.assertEqual('000', response['BNPLCaptureResponse']['response'])
+        self.assertEqual('Approved', response['BNPLCaptureResponse']['message'])
+
+    @mock.patch.object(online, '_http_post')
+    def test_simple_bnpl_inquiry(self,mock__http_post):
+
+        transaction = fields.BNPLInquiryRequest()
+        transaction.orderId = "154646587"
+        transaction.id = "1234"
+        transaction.cnpTxnId = '123456789'
+
+        mock__http_post.return_value = """<cnpOnlineResponse version='12.37' response='1' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'>
+                                                              </cnpOnlineResponse>
+                                                                      """
+        self.assertRaises(utils.VantivException, online.request, transaction, conf, 'dict')
+
+        mock__http_post.return_value = """<cnpOnlineResponse xmlns="http://www.vantivcnp.com/schema" version="12.37" response="0" message="Valid Format">
+                          <BNPLInquiryResponse id="1234" reportGroup="Default Report Group">
+                            <cnpTxnId>424226480138878584</cnpTxnId>
+                            <response>000</response>
+                            <responseTime>2024-07-10T06:50:28.083</responseTime>
+                            <message>Approved</message>
+                            <location>sandbox</location>
+                            <inquiryResult>
+                              <response>789</response>
+                              <message>Response number not supported, add to MessageMap</message>
+                            </inquiryResult>
+                          </BNPLInquiryResponse>
+                        </cnpOnlineResponse>"""
+
+        response = online.request(transaction, conf)
+        self.assertEqual('000', response['BNPLInquiryResponse']['response'])
+        self.assertEqual('Approved', response['BNPLInquiryResponse']['message'])
+        self.assertEqual('789', response['BNPLInquiryResponse']['inquiryResult']['response'])
+
+    @mock.patch.object(online, '_http_post')
+    def test_simple_bnpl_refund(self,mock__http_post):
+
+        transaction = fields.BNPLRefundRequest()
+        transaction.reportGroup = "ThisIsAGroup"
+        transaction.amount = "5000"
+        transaction.orderId = "154646587"
+        transaction.id = "1234"
+        transaction.cnpTxnId = '123456789'
+
+        mock__http_post.return_value = """<cnpOnlineResponse version='12.37' response='1' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'>
+                                                                      </cnpOnlineResponse>
+                                                                              """
+        self.assertRaises(utils.VantivException, online.request, transaction, conf, 'dict')
+
+        mock__http_post.return_value = """<cnpOnlineResponse xmlns="http://www.vantivcnp.com/schema" version="12.37" response="0" message="Valid Format">
+                                              <BNPLRefundResponse id="1234" reportGroup="ThisIsAGroup">
+                                                <cnpTxnId>223357368586466726</cnpTxnId>
+                                                <response>000</response>
+                                                <responseTime>2024-07-10T06:57:55</responseTime>
+                                                <message>Approved</message>
+                                                <location>sandbox</location>
+                                              </BNPLRefundResponse>
+                                            </cnpOnlineResponse>"""
+
+        response = online.request(transaction, conf)
+        self.assertEqual('000', response['BNPLRefundResponse']['response'])
+        self.assertEqual('Approved', response['BNPLRefundResponse']['message'])
+
+    @mock.patch.object(online, '_http_post')
+    def test_simple_finicity_account_req(self,mock__http_post):
+        transaction = fields.finicityAccountRequest()
+        transaction.reportGroup = "ThisIsAGroup"
+        transaction.echeckCustomerId = "ABC"
+        transaction.setId = "url1"
+        transaction.customerId = "154646587"
+        transaction.id = "1234"
+
+        mock__http_post.return_value = """<cnpOnlineResponse version='12.37' response='1' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'>
+                                                                              </cnpOnlineResponse>
+                                                                                      """
+        self.assertRaises(utils.VantivException, online.request, transaction, conf, 'dict')
+
+        mock__http_post.return_value = """<cnpOnlineResponse xmlns="http://www.vantivcnp.com/schema" version="12.37" response="0" message="Valid Format">
+                                              <finicityAccountResponse id="1234" reportGroup="ThisIsAGroup">
+                                                <cnpTxnId>262614646489677946</cnpTxnId>
+                                                <response>000</response>
+                                                <responseTime>2024-07-10T07:04:56.422</responseTime>
+                                                <message>Approved</message>
+                                                <location>sandbox</location>
+                                                <finicityAccount>
+                                                  <accountId>4699941963913185</accountId>
+                                                  <accType>Savings</accType>
+                                                  <realAccNum>76371962</realAccNum>
+                                                  <routingNum>78899753</routingNum>
+                                                </finicityAccount>
+                                              </finicityAccountResponse>
+                                            </cnpOnlineResponse>"""
+
+        response = online.request(transaction, conf)
+        self.assertEqual('000', response['finicityAccountResponse']['response'])
+        self.assertEqual('Approved', response['finicityAccountResponse']['message'])
+        self.assertEqual('sandbox', response['finicityAccountResponse']['location'])
+        self.assertEqual('Savings', response['finicityAccountResponse']['finicityAccount']['accType'])
+
+    @mock.patch.object(online, '_http_post')
+    def test_simple_finicity_url_req(self,mock__http_post):
+        transaction = fields.finicityUrlRequest()
+        transaction.reportGroup = "ThisIsAGroup"
+        transaction.customerId = "154646587"
+        transaction.firstName = "John"
+        transaction.lastName = "Smith"
+        transaction.setId = "url1"
+        transaction.phoneNumber = "1-801-984-4200"
+        transaction.email = "myname@mycompany.com"
+        transaction.id = "1234"
+
+        mock__http_post.return_value = """<cnpOnlineResponse version='12.37' response='1' message='Valid Format' xmlns='http://www.vantivcnp.com/schema'>
+                                                                                      </cnpOnlineResponse>
+                                                                                              """
+        self.assertRaises(utils.VantivException, online.request, transaction, conf, 'dict')
+
+        mock__http_post.return_value = """<cnpOnlineResponse xmlns="http://www.vantivcnp.com/schema" version="12.37" response="0" message="Valid Format">
+                                              <finicityUrlResponse id="1234" reportGroup="ThisIsAGroup">
+                                                <cnpTxnId>459704606506279456</cnpTxnId>
+                                                <response>000</response>
+                                                <responseTime>2024-07-10T07:06:18.023</responseTime>
+                                                <message>Approved</message>
+                                                <location>sandbox</location>
+                                                <echeckCustomerId>12345677</echeckCustomerId>
+                                                <url>www.google.com</url>
+                                              </finicityUrlResponse>
+                                            </cnpOnlineResponse>"""
+
+        response = online.request(transaction, conf)
+        self.assertEqual('000', response['finicityUrlResponse']['response'])
+        self.assertEqual('Approved', response['finicityUrlResponse']['message'])
+        self.assertEqual('sandbox', response['finicityUrlResponse']['location'])
 
 if __name__ == '__main__':
     unittest.main()
