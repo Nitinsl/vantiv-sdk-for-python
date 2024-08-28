@@ -1,5 +1,8 @@
 = Vantiv eCommerce Python SDK
 
+==Version 12.37.1 (v12.37.1)(August 28, 2024)
+* Change: [cnpAPI v12.37.1] Added change to upgrade to a newer version of PyXB-X library which supports Python 3.12
+
 ==Version 12.37.0 (v12.37.0)(July 10, 2024)
 * Change: [cnpAPI v12.37] New existing 'postCheckoutRedirectUrl' with min length '1' and maxlength '200'
 * Change: [cnpAPI v12.37] New enum 'provider' is added with value 'AFFIRM'
