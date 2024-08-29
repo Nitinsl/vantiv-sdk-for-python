@@ -11,14 +11,14 @@ if sys.version_info[:2] < (3, 8):
 
 setup(
     name='VantiveCommerceSDK',
-    version='12.37.0',
+    version='12.37.1',
     description='Vantiv eCommerce Python SDK',
     author='Vantiv eCommerce',
     author_email='SDKSupport@vantiv.com',
     url='https://developer.vantiv.com/community/ecommerce',
     packages=['vantivsdk', 'scripts'],
     install_requires=[
-        'PyXB-X==1.2.6.1',
+        'PyXB-X>=1.2.6.1',
         'paramiko>=1.14.0',
         'requests>=2.13.0',
         'six>=1.10.0',
