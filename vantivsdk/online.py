@@ -24,9 +24,14 @@
 #
 from __future__ import absolute_import, print_function, unicode_literals
 
+from pathlib import Path
+
 import requests
 import xmltodict
 import six
+
+import xml.etree.ElementTree as ET
+from vantivsdk import pgp_helper
 
 from vantivsdk.commManager import commManager
 from . import fields, utils, dict2obj
@@ -51,7 +56,7 @@ def request(transaction, conf, return_format='dict', timeout=30, sameDayFunding 
     if isinstance(transaction, dict):
         transaction = dict2obj.tofileds(transaction)
 
-    if not (isinstance(transaction, fields.recurringTransactionType)
+    if not (isinstance(transaction, fields.recurringTransactionType) or (transaction, fields.encryptionKeyRequest)
             or isinstance(transaction, fields.transactionType)):
         raise utils.VantivException(
             'transaction must be either cnp_xml_fields.recurringTransactionType or transactionType')
@@ -95,10 +100,75 @@ def _create_request_xml(transaction, conf, same_day_funding):
     request_obj = _create_request_obj(transaction, conf, same_day_funding)
     request_xml = utils.obj_to_xml(request_obj)
 
-    if conf.print_xml:
-        print('Request XML:\n', request_xml.decode('utf-8'), '\n')
+    if conf.oltpEncryptionKeyRequest == 'true':
+        encrypted_xml = _create_encryption_request(request_xml,conf)
 
-    return request_xml
+        if conf.print_xml:
+            print('Request XML:\n', request_xml.decode('utf-8'), '\n')
+
+        return encrypted_xml
+    else:
+        if conf.print_xml:
+            print('Request XML:\n', request_xml.decode('utf-8'), '\n')
+
+        return request_xml
+
+def _create_encryption_request(request_xml,conf):
+    # Parse the XML string
+    root = ET.fromstring(request_xml)
+    path = conf.oltpEncryptionKeyPath
+    keyseq = conf.oltpEncryptionKeySequence
+    namespace = {'ns': 'http://www.vantivcnp.com/schema'}
+
+    # Find the second child element
+    children = root.findall('./ns:*', namespace)
+
+    if len(children) > 1:
+        # Get the second child element
+        authorization_element = children[1]
+        str_authorization = ET.tostring(authorization_element, encoding='unicode')
+
+        if str_authorization.__contains__('encryptionKeyRequest'):
+            root.attrib['xmlns'] = "http://www.vantivcnp.com/schema"
+            return ET.tostring(root, encoding='unicode')
+        else:
+            if path is None:
+                raise utils.VantivException(
+                    "Problem in reading the Encryption Key path. Provide the Encryption key path.")
+            else:
+                path = Path(path)
+                if not path.exists() or not path.is_file():
+                    raise utils.VantivException(
+                        "The provided path is not a valid file path or the file does not exist.")
+
+            payload = pgp_helper.encryptPayload(str_authorization, path)
+
+            new_element = ET.Element('payload')
+            new_element.text = payload
+            new_element0 = ET.Element('encryptionKeySequence')
+            if keyseq is None or keyseq == '':
+                raise utils.VantivException(
+                    "Problem in reading the Encryption Key Sequence ...Provide the Encryption key Sequence ")
+            else:
+                new_element0.text = keyseq
+
+            element = ET.Element('encryptedPayload')
+
+            #removing the child element which needs to be encrypted.
+            root.remove(children[1])
+
+            element.append(new_element0)
+            element.append(new_element)
+
+            #adding new element after encryption.
+            root.append(element)
+
+            for elem in root.iter():
+                elem.tag = elem.tag.split('}', 1)[-1]
+            root.attrib['xmlns'] = "http://www.vantivcnp.com/schema"
+
+    # Convert the modified XML back to a string
+    return ET.tostring(root, encoding='unicode')
 
 
 def _create_request_obj(transaction, conf, same_day_funding):
@@ -155,6 +225,9 @@ def _create_request_obj(transaction, conf, same_day_funding):
     # </xs:choice>
     if isinstance(transaction, fields.recurringTransactionType):
         request_obj.recurringTransaction = transaction
+    # add elif condition for encryption
+    elif (conf.oltpEncryptionKeyRequest == 'true') and (transaction == 'CURRENT') or (transaction == 'PREVIOUS'):
+        request_obj.encryptionKeyRequest = transaction
     else:
         request_obj.transaction = transaction
     return request_obj
