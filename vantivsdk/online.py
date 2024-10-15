@@ -179,6 +179,8 @@ def _create_request_obj(transaction, conf, same_day_funding):
             <xs:choice>
                 <xs:element ref="xp:transaction" />
                 <xs:element ref="xp:recurringTransaction" />
+                <xs:element ref="xp:encryptionKeyRequest"/>
+                <xs:element ref="xp:encryptedPayload" />
             </xs:choice>
         </xs:sequence>
         <xs:attribute name="version" type="xp:versionType" use="required" />
@@ -221,12 +223,13 @@ def _create_request_obj(transaction, conf, same_day_funding):
     # <xs:choice>
     #     <xs:element ref="xp:transaction" />
     #     <xs:element ref="xp:recurringTransaction" />
+    #     <xs:element ref="xp:encryptionKeyRequest"/>
     # </xs:choice>
     if isinstance(transaction, fields.recurringTransactionType):
         request_obj.recurringTransaction = transaction
     # add elif condition for encryption
-    if (conf.oltpEncryptionPayload == 'true') and (transaction == 'CURRENT') or (transaction == 'PREVIOUS'):
-        request_obj.encryptionKeyRequest = transaction
+    elif hasattr (transaction, 'encryptionKeyRequest'):
+        request_obj.encryptionKeyRequest = transaction.encryptionKeyRequest
     else:
         request_obj.transaction = transaction
     return request_obj
