@@ -100,11 +100,11 @@ def _create_request_xml(transaction, conf, same_day_funding):
     request_obj = _create_request_obj(transaction, conf, same_day_funding)
     request_xml = utils.obj_to_xml(request_obj)
 
-    if conf.oltpEncryptionKeyRequest == 'true':
+    if conf.oltpEncryptionPayload == 'true':
         encrypted_xml = _create_encryption_request(request_xml,conf)
 
         if conf.print_xml:
-            print('Request XML:\n', request_xml.decode('utf-8'), '\n')
+            print('Request XML:\n', encrypted_xml.decode('utf-8'), '\n')
 
         return encrypted_xml
     else:
@@ -123,12 +123,15 @@ def _create_encryption_request(request_xml,conf):
     # Find the second child element
     children = root.findall('./ns:*', namespace)
 
+    for elem in root.iter():
+                elem.tag = elem.tag.split('}', 1)[-1]
+
     if len(children) > 1:
         # Get the second child element
-        authorization_element = children[1]
-        str_authorization = ET.tostring(authorization_element, encoding='unicode')
+        child_element = children[1]
+        str_element = ET.tostring(child_element, encoding='unicode')
 
-        if str_authorization.__contains__('encryptionKeyRequest'):
+        if str_element.__contains__('encryptionKeyRequest'):
             root.attrib['xmlns'] = "http://www.vantivcnp.com/schema"
             return ET.tostring(root, encoding='unicode')
         else:
@@ -141,7 +144,7 @@ def _create_encryption_request(request_xml,conf):
                     raise utils.VantivException(
                         "The provided path is not a valid file path or the file does not exist.")
 
-            payload = pgp_helper.encryptPayload(str_authorization, path)
+            payload = pgp_helper.encryptPayload(str_element, path)
 
             new_element = ET.Element('payload')
             new_element.text = payload
@@ -151,25 +154,21 @@ def _create_encryption_request(request_xml,conf):
                     "Problem in reading the Encryption Key Sequence ...Provide the Encryption key Sequence ")
             else:
                 new_element0.text = keyseq
-
-            element = ET.Element('encryptedPayload')
+            encrypted_element = ET.Element('encryptedPayload')
 
             #removing the child element which needs to be encrypted.
             root.remove(children[1])
 
-            element.append(new_element0)
-            element.append(new_element)
+            encrypted_element.append(new_element0)
+            encrypted_element.append(new_element)
 
             #adding new element after encryption.
-            root.append(element)
+            root.append(encrypted_element)
 
-            for elem in root.iter():
-                elem.tag = elem.tag.split('}', 1)[-1]
             root.attrib['xmlns'] = "http://www.vantivcnp.com/schema"
 
     # Convert the modified XML back to a string
     return ET.tostring(root, encoding='unicode')
-
 
 def _create_request_obj(transaction, conf, same_day_funding):
     """ Create <xs:element name="cnpOnlineRequest">
@@ -226,7 +225,7 @@ def _create_request_obj(transaction, conf, same_day_funding):
     if isinstance(transaction, fields.recurringTransactionType):
         request_obj.recurringTransaction = transaction
     # add elif condition for encryption
-    elif (conf.oltpEncryptionKeyRequest == 'true') and (transaction == 'CURRENT') or (transaction == 'PREVIOUS'):
+    if (conf.oltpEncryptionPayload == 'true') and (transaction == 'CURRENT') or (transaction == 'PREVIOUS'):
         request_obj.encryptionKeyRequest = transaction
     else:
         request_obj.transaction = transaction

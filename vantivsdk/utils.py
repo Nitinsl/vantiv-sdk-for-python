@@ -86,7 +86,10 @@ class Configuration(object):
             "payfacUsername_v12_7": "",
             "payfacPassword_v12_7": "",
             "payfacSftpUsername_v12_7": "",
-            "payfacSftpPassword_v12_7": ""
+            "payfacSftpPassword_v12_7": "",
+            "oltpEncryptionKeySequence": "",
+            "oltpEncryptionPayload": "",
+            "oltpEncryptionKeyPath": ""
         }
 
         # set default values
