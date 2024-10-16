@@ -900,7 +900,7 @@ class TestBatch(unittest.TestCase):
         self.assertEquals(response['batchResponse']['saleResponse']['cnpTxnId'], '427453992541199977')
 
     @mock.patch.object(batch, '_get_file_str_from_sftp')
-    def test_batch_v12_37(self, mock__get_file_str_from_sftp):
+    def test_batch_v12_40(self, mock__get_file_str_from_sftp):
         txnBatch = batch.Transactions()
         authorization = fields.authorization()
         authorization.id = '1'
