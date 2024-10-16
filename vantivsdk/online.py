@@ -104,7 +104,7 @@ def _create_request_xml(transaction, conf, same_day_funding):
         encrypted_xml = _create_encryption_request(request_xml,conf)
 
         if conf.print_xml:
-            print('Request XML:\n', encrypted_xml.decode('utf-8'), '\n')
+            print('Request XML:\n', encrypted_xml, '\n')
 
         return encrypted_xml
     else:
@@ -123,6 +123,7 @@ def _create_encryption_request(request_xml,conf):
     # Find the second child element
     children = root.findall('./ns:*', namespace)
 
+    # Removing extra namespace from tags
     for elem in root.iter():
                 elem.tag = elem.tag.split('}', 1)[-1]
 
@@ -131,6 +132,7 @@ def _create_encryption_request(request_xml,conf):
         child_element = children[1]
         str_element = ET.tostring(child_element, encoding='unicode')
 
+        # Skip the encryption payload part for encryptionKeyRequest
         if str_element.__contains__('encryptionKeyRequest'):
             root.attrib['xmlns'] = "http://www.vantivcnp.com/schema"
             return ET.tostring(root, encoding='unicode')
@@ -143,7 +145,7 @@ def _create_encryption_request(request_xml,conf):
                 if not path.exists() or not path.is_file():
                     raise utils.VantivException(
                         "The provided path is not a valid file path or the file does not exist.")
-
+            # Send payload for encryption
             payload = pgp_helper.encryptPayload(str_element, path)
 
             new_element = ET.Element('payload')
@@ -156,13 +158,13 @@ def _create_encryption_request(request_xml,conf):
                 new_element0.text = keyseq
             encrypted_element = ET.Element('encryptedPayload')
 
-            #removing the child element which needs to be encrypted.
+            # removing the child element which needs to be encrypted.
             root.remove(children[1])
 
             encrypted_element.append(new_element0)
             encrypted_element.append(new_element)
 
-            #adding new element after encryption.
+            # adding new element after encryption.
             root.append(encrypted_element)
 
             root.attrib['xmlns'] = "http://www.vantivcnp.com/schema"
@@ -227,8 +229,8 @@ def _create_request_obj(transaction, conf, same_day_funding):
     # </xs:choice>
     if isinstance(transaction, fields.recurringTransactionType):
         request_obj.recurringTransaction = transaction
-    # add elif condition for encryption
-    elif hasattr (transaction, 'encryptionKeyRequest'):
+    # add elif condition for encryptionKeyRequest
+    elif hasattr(transaction, 'encryptionKeyRequest'):
         request_obj.encryptionKeyRequest = transaction.encryptionKeyRequest
     else:
         request_obj.transaction = transaction
