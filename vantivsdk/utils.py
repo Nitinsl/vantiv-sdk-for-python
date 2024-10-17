@@ -70,6 +70,7 @@ class Configuration(object):
             'batch_requests_path': os.path.join(tempfile.gettempdir(), 'vantiv_sdk_batch_request'),
             'batch_response_path': os.path.join(tempfile.gettempdir(), 'vantiv_sdk_batch_response'),
             'print_xml': False,
+            'neuter_xml': True,
             'id': '',
             'vantivPublicKeyID': '',
             'gpgPassphrase': '',
@@ -88,7 +89,7 @@ class Configuration(object):
             "payfacSftpUsername_v12_7": "",
             "payfacSftpPassword_v12_7": "",
             "oltpEncryptionKeySequence": "",
-            "oltpEncryptionPayload": "",
+            "oltpEncryptionPayload": False,
             "oltpEncryptionKeyPath": ""
         }
 

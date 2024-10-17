@@ -24,6 +24,7 @@
 #
 from __future__ import absolute_import, print_function, unicode_literals
 
+import re
 from pathlib import Path
 
 import requests
@@ -100,20 +101,16 @@ def _create_request_xml(transaction, conf, same_day_funding):
     request_obj = _create_request_obj(transaction, conf, same_day_funding)
     request_xml = utils.obj_to_xml(request_obj)
 
-    if conf.oltpEncryptionPayload == 'true':
-        encrypted_xml = _create_encryption_request(request_xml,conf)
+    if conf.oltpEncryptionPayload:
+        request_xml = _create_encryption_request(request_xml, conf)
 
-        if conf.print_xml:
-            print('Request XML:\n', encrypted_xml, '\n')
+    if conf.print_xml:
+        print_xml(request_xml.decode('utf-8'), conf.neuter_xml)
 
-        return encrypted_xml
-    else:
-        if conf.print_xml:
-            print('Request XML:\n', request_xml.decode('utf-8'), '\n')
+    return request_xml
 
-        return request_xml
 
-def _create_encryption_request(request_xml,conf):
+def _create_encryption_request(request_xml, conf):
     # Parse the XML string
     ET.register_namespace('', 'http://www.vantivcnp.com/schema')
     root = ET.fromstring(request_xml)
@@ -131,8 +128,7 @@ def _create_encryption_request(request_xml,conf):
 
         # Skip the encryption payload part for encryptionKeyRequest
         if str_element.__contains__('encryptionKeyRequest'):
-            root.attrib['xmlns'] = "http://www.vantivcnp.com/schema"
-            return ET.tostring(root, encoding='unicode')
+            return ET.tostring(root)
         else:
             if path is None:
                 raise utils.VantivException(
@@ -165,7 +161,8 @@ def _create_encryption_request(request_xml,conf):
             root.append(encrypted_element)
 
     # Convert the modified XML back to a string
-    return ET.tostring(root, encoding='unicode')
+    return ET.tostring(root)
+
 
 def _create_request_obj(transaction, conf, same_day_funding):
     """ Create <xs:element name="cnpOnlineRequest">
@@ -273,3 +270,27 @@ def _http_post(post_data, conf, timeout):
         print('Response XML:\n', response.text, '\n')
 
     return response.text
+
+
+def neuter_xml(xml):
+    neuter_str = "NEUTERED"
+    if xml is None:
+        return xml
+    xml = re.sub(r"<accNum>.*?</accNum>", f"<accNum>{neuter_str}</accNum>", xml)
+    xml = re.sub(r"<user>.*?</user>", f"<user>{neuter_str}</user>", xml)
+    xml = re.sub(r"<password>.*?</password>", f"<password>{neuter_str}</password>", xml)
+    xml = re.sub(r"<track>.*?</track>", f"<track>{neuter_str}</track>", xml)
+    xml = re.sub(r"<number>.*?</number>", f"<number>{neuter_str}</number>", xml)
+    xml = re.sub(r"<cardValidationNum>.*?</cardValidationNum>", f"<cardValidationNum>{neuter_str}</cardValidationNum>",
+                 xml)
+
+    return xml
+
+
+def print_xml(xml_request, neuter_xml_flag):
+    xml_to_log = xml_request
+    if neuter_xml_flag:
+        xml_to_log = neuter_xml(xml_to_log)
+    print(f"Request XML: {xml_to_log}")
+
+    return xml_request
