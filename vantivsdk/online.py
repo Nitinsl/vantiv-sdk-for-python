@@ -115,6 +115,7 @@ def _create_request_xml(transaction, conf, same_day_funding):
 
 def _create_encryption_request(request_xml,conf):
     # Parse the XML string
+    ET.register_namespace('', 'http://www.vantivcnp.com/schema')
     root = ET.fromstring(request_xml)
     path = conf.oltpEncryptionKeyPath
     keyseq = conf.oltpEncryptionKeySequence
@@ -122,10 +123,6 @@ def _create_encryption_request(request_xml,conf):
 
     # Find the second child element
     children = root.findall('./ns:*', namespace)
-
-    # Removing extra namespace from tags
-    for elem in root.iter():
-                elem.tag = elem.tag.split('}', 1)[-1]
 
     if len(children) > 1:
         # Get the second child element
@@ -166,8 +163,6 @@ def _create_encryption_request(request_xml,conf):
 
             # adding new element after encryption.
             root.append(encrypted_element)
-
-            root.attrib['xmlns'] = "http://www.vantivcnp.com/schema"
 
     # Convert the modified XML back to a string
     return ET.tostring(root, encoding='unicode')
